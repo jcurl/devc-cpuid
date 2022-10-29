@@ -1,0 +1,7 @@
+# To use this toolchain file
+#
+# cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchain/clang
+#
+
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)

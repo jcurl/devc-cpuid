@@ -25,6 +25,7 @@ This project requires the installation of:
     - [2.2.5. Enabling Sanitizers](#225-enabling-sanitizers)
   - [2.3. Test Suites](#23-test-suites)
     - [2.3.1. Running Tests](#231-running-tests)
+    - [2.3.2. Generating Code Coverage Reports](#232-generating-code-coverage-reports)
 
 ## 1. Tested Environments
 
@@ -184,3 +185,27 @@ If you want to run the google test suite directly
 cmake
 ./test/lib/devc-cpuid-test
 ```
+
+#### 2.3.2. Generating Code Coverage Reports
+
+The project includes `lcov` for GCC targets and `llvm-cov` for Clang targets. To
+enable code coverage, you should build with `Debug` mode, and must enable
+testing and code coverage.
+
+On a normal Linux host, this builds for GCC and LCOV.
+
+```sh
+cmake .. -DCODE_COVERAGE=on -DENABLE_TEST=on -DCMAKE_BUILD_TYPE=Debug
+make
+make ccov-example-test
+```
+
+Then point your browser to the code coverage reports, which is in
+`./ccov/example-test/index.html`.
+
+When modifying this project for your own target, see `test/CMakeLists.txt` and
+adapt that to choose which files should be excluded from the coverage report
+(e.g. all test code).
+
+Install the `llvm` toolchain to get `llvm-cov` and build using the Clang
+compiler to get coverage.

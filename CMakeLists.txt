@@ -34,6 +34,14 @@ if("${CMAKE_CXX_FLAGS}" STREQUAL "")
     endif()
 endif()
 
+# Checking if we should enable coverage. Only do so in DEBUG and if testing is enabled
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/coverage" ${CMAKE_MODULE_PATH})
+include(code-coverage)
+add_code_coverage()
+if(CODE_COVERAGE)
+    add_compile_options(-O0)
+endif()
+
 add_subdirectory(src)
 
 if(ENABLE_TEST)

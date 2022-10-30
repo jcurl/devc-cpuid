@@ -23,7 +23,7 @@ function build_linux() {
       rm -rf build_lin
     fi
 
-    cmake -S . -B build_lin -DSANITIZE_ADDRESS=on && \
+    cmake -S . -B build_lin -DSANITIZE_ADDRESS=on -DCODE_COVERAGE=on && \
     cd build_lin && \
     make
 
@@ -53,7 +53,7 @@ function build_clang() {
       rm -rf build_clang
     fi
 
-    cmake -S . -B build_clang -DCMAKE_TOOLCHAIN_FILE=toolchain/clang -DSANITIZE_ADDRESS=on && \
+    cmake -S . -B build_clang -DCMAKE_TOOLCHAIN_FILE=toolchain/clang -DSANITIZE_ADDRESS=on -DCODE_COVERAGE=on && \
     cd build_clang && \
     make
 

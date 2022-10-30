@@ -19,6 +19,12 @@ endif()
 
 add_sanitizers(${BINARY})
 
+target_code_coverage(${BINARY}
+    EXCLUDE
+    ${CMAKE_SOURCE_DIR}/test/*
+    ${CMAKE_BINARY_DIR}/_deps/*
+)
+
 # Access the source directories under test
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/lib

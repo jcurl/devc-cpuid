@@ -67,6 +67,8 @@
         "variant": "cpp"
     },
     "cSpell.words": [
+        "bugprone",
+        "NOLINTNEXTLINE",
         "rjcp",
         "tparam"
     ]

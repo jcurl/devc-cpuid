@@ -4,6 +4,8 @@ project(devc-cpuid C CXX)
 option(ENABLE_CLANG_TIDY "Enable checks using Clang-Tidy if available" ON)
 option(ENABLE_TEST "Enable building tests" ON)
 
+find_package(Threads)
+
 # See https://github.com/arsenm/sanitizers-cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/sanitizers" ${CMAKE_MODULE_PATH})
 find_package(Sanitizers)

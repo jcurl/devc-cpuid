@@ -2,6 +2,9 @@ include(GoogleTest)
 
 set(BINARY devc-cpuid-test)
 set(SOURCES
+    cpuid/cpuid_default_test.cpp
+    cpuid/cpuid_native_test.cpp
+    cpuid/cpuid_register_test.cpp
     os/qnx/native/filehandle_type.c
     os/qnx/native/opaque_type.c
     os/qnx/native/unique_handle_test.cpp
@@ -9,8 +12,7 @@ set(SOURCES
 
 add_executable(${BINARY} ${SOURCES})
 target_compile_features(${BINARY} PUBLIC cxx_std_17)
-#target_link_libraries(${BINARY} PUBLIC devc-cpuid-lib GTest::gtest_main)
-target_link_libraries(${BINARY} PUBLIC GTest::gtest_main)
+target_link_libraries(${BINARY} PUBLIC devc-cpuid-lib GTest::gtest_main ${CMAKE_THREAD_LIBS_INIT})
 add_test(NAME ${BINARY} COMMAND ${BINARY})
 
 if(CLANG_TIDY_EXE)
@@ -21,6 +23,7 @@ add_sanitizers(${BINARY})
 
 target_code_coverage(${BINARY}
     EXCLUDE
+    ${CMAKE_SOURCE_DIR}/src/lib/stdext/*
     ${CMAKE_SOURCE_DIR}/test/*
     ${CMAKE_BINARY_DIR}/_deps/*
 )

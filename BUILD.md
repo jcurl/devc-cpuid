@@ -30,7 +30,7 @@ This project requires the installation of:
 ## 1. Tested Environments
 
 The build has been tested on Ubuntu 22.04 with GCC 11, Clang 14.0 and QCC 8.3.0
-(QNX 7.1.0 SDP).
+(QNX 7.1.0 SDP) for 64-bit targets.
 
 ## 2. Building and Executing Tests
 
@@ -150,6 +150,9 @@ ignored.
 ```sh
 cmake .. -DENABLE_CLANG_TIDY=off
 ```
+
+You might want to disable clang-tidy for Ubuntu 20.04 and earlier to avoid
+excessive warnings (clang-tidy should support //NOLINTBEGIN() .. //NOLINTEND() )
 
 #### 2.2.5. Enabling Sanitizers
 

@@ -3,8 +3,10 @@ include(GoogleTest)
 set(BINARY devc-cpuid-test)
 set(SOURCES
     cpuid/cpuid_default_test.cpp
+    cpuid/cpuid_device_test.cpp
     cpuid/cpuid_native_test.cpp
     cpuid/cpuid_register_test.cpp
+    os/qnx/native/file/file_test.cpp
     os/qnx/native/filehandle_type.c
     os/qnx/native/opaque_type.c
     os/qnx/native/unique_handle_test.cpp

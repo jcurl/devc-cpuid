@@ -1,22 +1,39 @@
 include(CheckSymbolExists)
+include(CMakePushCheckState)
 
 set(BINARY devc-cpuid-lib)
 set(SOURCES
     cpuid/cpuid_default.cpp
+    cpuid/cpuid_device.cpp
     cpuid/cpuid_native.cpp
     cpuid/cpuid_register.cpp
+    os/qnx/native/file/file.cpp
 )
 
-# QNX doesn't have `pthread_getaffinity_np`, so we need to use `ThreadCtl`.
-check_symbol_exists(ThreadCtl "sys/neutrino.h" HAVE_NTO_THREADCTL)
-if(NOT HAVE_NTO_THREADCTL)
+find_package(Threads REQUIRED)
+
+cmake_push_check_state(RESET)
+list(APPEND CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
+list(APPEND CMAKE_REQUIRED_LIBRARIES pthread)
+check_symbol_exists(pthread_setaffinity_np pthread.h HAVE_PTHREAD_SETAFFINITY_NP)
+cmake_reset_check_state()
+
+# We need to be able to set the affinity of a thread to a particular CPU
+if(HAVE_PTHREAD_SETAFFINITY_NP)
+    add_compile_definitions(_GNU_SOURCE)
     set(SOURCES ${SOURCES}
         cpuid/cpuid_native_linux.cpp
     )
 else()
-    set(SOURCES ${SOURCES}
-        cpuid/cpuid_native_qnx.cpp
-    )
+    # QNX doesn't have `pthread_getaffinity_np`, so we need to use `ThreadCtl`.
+    check_symbol_exists(ThreadCtl "sys/neutrino.h" HAVE_NTO_THREADCTL)
+    if(HAVE_NTO_THREADCTL)
+        set(SOURCES ${SOURCES}
+            cpuid/cpuid_native_qnx.cpp
+        )
+    else()
+        message(FATAL_ERROR "Can't find GNU Pthreads or NTO ThreadCtl()")
+    endif()
 endif()
 
 add_library(${BINARY} STATIC ${SOURCES})

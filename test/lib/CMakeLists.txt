@@ -4,6 +4,7 @@ set(BINARY devc-cpuid-test)
 set(SOURCES
     cpuid/cpuid_default_test.cpp
     cpuid/cpuid_device_test.cpp
+    cpuid/cpuid_factory_test.cpp
     cpuid/cpuid_native_test.cpp
     cpuid/cpuid_register_test.cpp
     os/qnx/native/file/file_test.cpp

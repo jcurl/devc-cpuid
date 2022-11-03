@@ -1,0 +1,45 @@
+@startuml ICpuId
+
+class CpuIdRegister {
+    +IsValid(): bool
+    +Eax(): int32_t
+    +Ebx(): int32_t
+    +Ecx(): int32_t
+    +Edx(): int32_t
+}
+
+abstract class ICpuId {
+    +{abstract} GetCpuId(eax: int32_t, ecx: int32_t) :\n    const CpuIdRegister
+    +~ICpuId() = default
+}
+
+ICpuId -r- CpuIdRegister : <<returns>>
+
+class CpuIdNative {
+    +CpuIdNative(cpunum: int)
+    +GetCpuId(eax: int32_t, ecx: int32_t) :\n    const CpuIdRegister
+}
+
+class CpuIdDefault {
+    +CpuIdDefault(cpunum: int)
+    +GetCpuId(eax: int32_t, ecx: int32_t) :\n    const CpuIdRegister
+}
+
+enum DeviceAccessMethod {
+    +seek
+    +pread
+}
+
+class CpuIdDevice {
+    +CpuIdDevice(cpunum: int)
+    +CpuIdDevice(cpunum: int, method: DeviceAccessMethod)
+    +GetCpuId(eax: int32_t, ecx: int32_t) :\n    const CpuIdRegister
+}
+
+CpuIdDevice -d- DeviceAccessMethod
+
+ICpuId <|.d. CpuIdNative
+ICpuId <|.d. CpuIdDefault
+ICpuId <|.d. CpuIdDevice
+
+@enduml

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="251px" preserveAspectRatio="none" style="width:336px;height:251px;background:#FFFFFF;" version="1.1" viewBox="0 0 336 251" width="336px" zoomAndPan="magnify"><defs/><g><!--MD5=[15faab5924118989e3daca4f4203be56]
+class ICpuIdFactory--><g id="elem_ICpuIdFactory"><rect codeLine="2" fill="#F1F1F1" height="80.5938" id="ICpuIdFactory" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="319" x="7" y="7"/><ellipse cx="114.25" cy="23" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M114.3594,18.3438 L113.2031,23.4219 L115.5313,23.4219 L114.3594,18.3438 Z M112.875,16.1094 L115.8594,16.1094 L119.2188,28.5 L116.7656,28.5 L116,25.4375 L112.7188,25.4375 L111.9688,28.5 L109.5313,28.5 L112.875,16.1094 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="96" x="134.75" y="27.8467">ICpuIdFactory</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="325" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="325" y1="47" y2="47"/><ellipse cx="18" cy="60.6484" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="293" x="27" y="63.9951">create(cpunum: int) : unique_ptr&lt;ICpuId&gt;</text><ellipse cx="18" cy="76.9453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="182" x="27" y="80.292">~ICpuIdFactory() = default</text></g><!--MD5=[622e9bcad37ae1b3b91c635667c1e00f]
+class CpuIdFactory--><g id="elem_CpuIdFactory"><rect codeLine="7" fill="#F1F1F1" height="96.8906" id="CpuIdFactory" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="317" x="8" y="148"/><ellipse cx="111.75" cy="164" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M114.7188,169.6406 Q114.1406,169.9375 113.5,170.0781 Q112.8594,170.2344 112.1563,170.2344 Q109.6563,170.2344 108.3281,168.5938 Q107.0156,166.9375 107.0156,163.8125 Q107.0156,160.6875 108.3281,159.0313 Q109.6563,157.375 112.1563,157.375 Q112.8594,157.375 113.5,157.5313 Q114.1563,157.6875 114.7188,157.9844 L114.7188,160.7031 Q114.0938,160.125 113.5,159.8594 Q112.9063,159.5781 112.2813,159.5781 Q110.9375,159.5781 110.25,160.6563 Q109.5625,161.7188 109.5625,163.8125 Q109.5625,165.9063 110.25,166.9844 Q110.9375,168.0469 112.2813,168.0469 Q112.9063,168.0469 113.5,167.7813 Q114.0938,167.5 114.7188,166.9219 L114.7188,169.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="90" x="132.25" y="168.8467">CpuIdFactory</text><rect fill="#FFFFFF" height="15.9688" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:2.0,2.0;" width="9" x="319" y="145"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="7" x="320" y="157.1387">T</text><line style="stroke:#181818;stroke-width:0.5;" x1="9" x2="324" y1="180" y2="180"/><line style="stroke:#181818;stroke-width:0.5;" x1="9" x2="324" y1="188" y2="188"/><ellipse cx="19" cy="201.6484" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="28" y="204.9951">CpuIdFactory()</text><ellipse cx="19" cy="217.9453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="177" x="28" y="221.292">CpuIdFactory(config: T&amp;);</text><ellipse cx="19" cy="234.2422" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="291" x="28" y="237.5889">create(cpunum: int) : unique_ptr&lt;ICpuId&gt;</text></g><!--MD5=[c0b9221b9fe0bb1233f71c78fee9de77]
+reverse link ICpuIdFactory to CpuIdFactory--><g id="link_ICpuIdFactory_CpuIdFactory"><path codeLine="13" d="M166.5,108.71 C166.5,121.75 166.5,135.36 166.5,147.84 " fill="none" id="ICpuIdFactory-backto-CpuIdFactory" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="159.5,108.28,166.5,88.28,173.5,108.28,159.5,108.28" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[90421081e47a413ed884509d399ac8e1]
+@startuml ICpuIdFactory
+
+abstract class ICpuIdFactory {
+    +{abstract} create(cpunum: int) : unique_ptr<ICpuId>
+    +~ICpuIdFactory() = default
+}
+
+class CpuIdFactory<T> {
+    +CpuIdFactory()
+    +CpuIdFactory(config: T&);
+    +create(cpunum: int) : unique_ptr<ICpuId>
+}
+
+ICpuIdFactory <|.d. CpuIdFactory
+
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

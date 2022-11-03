@@ -1,0 +1,57 @@
+@startuml CpuIdFactory_T
+
+abstract class ICpuIdFactory {
+    +{abstract} create(cpunum: int) : unique_ptr<ICpuId>
+    +~ICpuIdFactory() = default
+}
+
+class CpuIdFactory<T> {
+    +CpuIdFactory()
+    +CpuIdFactory(config: T&);
+    +create(cpunum: int) : unique_ptr<ICpuId>
+}
+
+ICpuIdFactory <|.d. CpuIdFactory
+
+class CpuIdDefaultConfig { }
+
+class "CpuIdFactory<CpuIdDefaultConfig>" as CpuIdFactory_CpuIdDefaultConfig {
+    +CpuIdFactory()
+    +CpuIdFactory(config: CpuIdDefaultConfig&)
+    +create(cpunum: int) : unique_ptr<ICpuId>
+}
+
+class CpuIdNativeConfig { }
+
+class "CpuIdFactory<CpuIdNativeConfig>" as CpuIdFactory_CpuIdNativeConfig {
+    +CpuIdFactory()
+    +CpuIdFactory(config: CpuIdNativeConfig&)
+    +create(cpunum: int) : unique_ptr<ICpuId>
+}
+
+class CpuIdDeviceConfig {
+    method: DeviceAccessMethod
+}
+
+class "CpuIdFactory<CpuIdDeviceConfig>" as CpuIdFactory_CpuIdDeviceConfig {
+    +CpuIdFactory()
+    +CpuIdFactory(config: CpuIdDeviceConfig&)
+    +create(cpunum: int) : unique_ptr<ICpuId>
+    -m_method: DeviceAccessMethod
+}
+
+CpuIdFactory -d- CpuIdFactory_CpuIdDefaultConfig
+CpuIdFactory_CpuIdDefaultConfig -d- CpuIdDefaultConfig
+
+CpuIdFactory -d- CpuIdFactory_CpuIdNativeConfig
+CpuIdFactory_CpuIdNativeConfig -d- CpuIdNativeConfig
+
+CpuIdFactory -d- CpuIdFactory_CpuIdDeviceConfig
+CpuIdFactory_CpuIdDeviceConfig -d- CpuIdDeviceConfig
+
+class ICpuIdConfig { }
+
+CpuIdDefaultConfig .d.|> ICpuIdConfig
+CpuIdNativeConfig .d.|> ICpuIdConfig
+CpuIdDeviceConfig .d.|> ICpuIdConfig
+@enduml

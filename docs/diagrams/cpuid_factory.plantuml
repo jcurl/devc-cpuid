@@ -1,0 +1,16 @@
+@startuml ICpuIdFactory
+
+abstract class ICpuIdFactory {
+    +{abstract} create(cpunum: int) : unique_ptr<ICpuId>
+    +~ICpuIdFactory() = default
+}
+
+class CpuIdFactory<T> {
+    +CpuIdFactory()
+    +CpuIdFactory(config: T&);
+    +create(cpunum: int) : unique_ptr<ICpuId>
+}
+
+ICpuIdFactory <|.d. CpuIdFactory
+
+@enduml

@@ -1,34 +1,16 @@
-# Design <!-- omit in toc -->
+# 1. Organisation of Code <!-- omit in toc -->
 
-This document presents the design and structure of the `devc-cpuid` resource
-manager.
+- [1. Namespaces Organisation](#1-namespaces-organisation)
+- [2. Folder Organisation](#2-folder-organisation)
+- [3. Include Files](#3-include-files)
+- [4. Scope of each Source File](#4-scope-of-each-source-file)
 
-Motivation of this project is not to just implement a CPUID driver that mimics
-Linux, but to:
 
-* Design it in a way using a modern C++17 compiler (whereby normally QNX
-  resource managers are typically written in C);
-* Builds should be done using the [CMake](https://cmake.org/) build system,
-  instead of the Momentics IDE;
-* Use google test for unit testing of the resource manager, allowing unit
-  testing also on a non-QNX host;
-* Investigate how to obtain code coverage when testing;
-* Extend non-QNX hosts to also use sanitizers for spotting possible errors.
-
-It is also my first C++ project of note, where I've mostly written C and C# in
-the past.
-
-- [1. Language and Code Structure](#1-language-and-code-structure)
-  - [1.1. Namespaces Organisation](#11-namespaces-organisation)
-  - [1.2. Folder Organisation](#12-folder-organisation)
-
-## 1. Language and Code Structure
-
-### 1.1. Namespaces Organisation
+## 1. Namespaces Organisation
 
 The namespace hierarchy:
 
-* rjcp::qnx::cpuid
+* rjcp::cpuid
 
   The main application that implements the resource manager API.
 
@@ -51,7 +33,7 @@ The namespace hierarchy:
 
   Only the `rjcp::qnx::os` namespace should include headers from this namespace.
 
-### 1.2. Folder Organisation
+## 2. Folder Organisation
 
 The upper level folders are:
 
@@ -65,11 +47,22 @@ The upper level folders are:
     namespaces.
   * `CMakeLists.txt` - Build file for a static library (used for testing) and
     the main program.
+  * `lib` - All testable code is put here. This project is small enough that it
+    does not warrant having multiple libraries. It is used by the resource
+    manager, tools and test cases.
+    * Code in this folder matches the namespace organisation, so that
+      `rjcp::os::qnx::native` would be in the folder `lib/os/qnx/native`.
+  * `devc-cpuid` - The resource manager.
+  * `cpuid-tool` - The tool to do integration tests on both Linux and QNX. It
+    can be used to exercise the APIs and compare results, as well as extract
+    information, which is useful for my other project,
+    [RJCP.DLL.CpuId](https://github.com/jcurl/RJCP.DLL.CpuId/).
 * `test/` - Implementation of test cases using google test.
   * The organisation of folders follow the same structure as the namespaces for
     the classes under test.
   * `CMakeLists.txt` - Build file for the google unit tests, links to the static
     library built under `src`.
+  * `lib` - Mirrors the `src/lib` with test cases and test specific code.
 * `toolchain/` - Files for toolchain builds.
   * `qcc710_x86_64` - Example toolchain file for QNX 7.1.0 x86_64 architecture.
   * `clang` - Example toolchain to use the clang compiler
@@ -79,3 +72,18 @@ The upper level folders are:
 * `LICENSE.md` - The license for this project.
 * `README.md` - Introduction to this repository.
 * `build.sh` - An example build script.
+
+## 3. Include Files
+
+This project is completely self contained, and it is not intended that code
+would be exported as its own package. As such, all includes are available,
+considered public as needed within the project. This puts the (small) burden on
+the maintainer to understand the structure of the code when using new headers,
+that the include makes sense.
+
+## 4. Scope of each Source File
+
+Each source file generally only contains one class. This leads to an explosion
+of many files, but with the benefit of being able to quickly identify which file
+contains what classes or headers.
+

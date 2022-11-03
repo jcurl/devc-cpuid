@@ -31,3 +31,5 @@ Design Information
 
 * [CPUID Classes](CpuIdDesign.md). Describes the classes to create a `ICpuId`
   object via factories derived from `ICpuIdFactory`.
+* [C++ OS Wrappers](OsWrapper.md). Wrapping POSIX and OS calls to present a
+  consistent C++ interface.

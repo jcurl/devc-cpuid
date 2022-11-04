@@ -27,9 +27,14 @@ General Information
 * [Organisation of Code](CodeOrganisation.md). Describes how the repository is
   laid out, and some principles for structure in this repository.
 
-Design Information
+Library Design Information
 
 * [CPUID Classes](CpuIdDesign.md). Describes the classes to create a `ICpuId`
   object via factories derived from `ICpuIdFactory`.
 * [C++ OS Wrappers](OsWrapper.md). Wrapping POSIX and OS calls to present a
   consistent C++ interface.
+
+CPUID Tool Design
+
+* [CPUID Tool Design](Tool-CpuIdDesign.md). Describes the design of the simple
+  tool, used to dump the CPUID instruction information.

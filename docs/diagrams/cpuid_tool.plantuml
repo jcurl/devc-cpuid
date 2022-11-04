@@ -1,0 +1,49 @@
+@startuml
+
+rectangle {
+    abstract class ICpuIdOutputWriter { }
+    class CpuIdXmlOutputWriter { }
+
+    ICpuIdOutputWriter <|.d. CpuIdXmlOutputWriter
+}
+
+class main { }
+
+class CpuIdOptions { }
+
+abstract class ICpuIdFactory { }
+' abstract class ICpuId { }
+
+class CpuIdDumper { }
+
+class CpuIdDefaultDump { }
+note bottom {
+    Extra class that
+    might specialize
+    dumping a
+    different CPU
+}
+
+class CpuIdIntelDump { }
+
+abstract class ICpuIdDump { }
+
+class CpuIdDump { }
+
+main *-l- CpuIdOptions
+
+main *-d- ICpuIdFactory
+main *-d- ICpuIdOutputWriter
+main *-d- CpuIdDumper
+CpuIdDumper o-u- ICpuIdFactory
+CpuIdDumper o-l- ICpuIdOutputWriter
+' ICpuIdFactory -r-> ICpuId : <<instantiates>>
+
+CpuIdDumper *-d- CpuIdIntelDump
+CpuIdDumper *-d- CpuIdDefaultDump
+
+CpuIdIntelDump -d-|> CpuIdDump
+CpuIdDefaultDump -d-|> CpuIdDump
+CpuIdDump .r.|> ICpuIdDump
+
+@enduml

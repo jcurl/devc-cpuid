@@ -11,46 +11,11 @@
 namespace rjcp::cpuid {
 
 /**
- * @brief Template class for factories creating objects of type ICpuId.
- *
- * @tparam T The configuration object, which is also used to choose the object
- * to build from the factory's create() method.
+ * @brief Function to instantiate a factory with a given factory config that serves as a blueprint.
+ * @param config The blueprint configuration object that determines which concrete type will be created.
  */
-template<typename T>
-class CpuIdFactory : public ICpuIdFactory
-{
-public:
-    CpuIdFactory() noexcept;
-
-    CpuIdFactory(T& config) noexcept;
-
-    /**
-     * @brief Create the default CPUID object.
-     *
-     * @param cpunum The CPU object to create for.
-     * @return ICpuId The CPUID object.
-     */
-    auto create(int cpunum) noexcept -> std::unique_ptr<ICpuId>;
-};
-
-/**
- * @brief Specialization for the CpuIdDeviceConfig
- *
- * @tparam
- */
-template<>
-class CpuIdFactory<CpuIdDeviceConfig> : public ICpuIdFactory
-{
-public:
-    CpuIdFactory() noexcept;
-
-    CpuIdFactory(CpuIdDeviceConfig& config) noexcept;
-
-    auto create(int cpunum) noexcept -> std::unique_ptr<ICpuId> override;
-
-private:
-    DeviceAccessMethod m_method{DeviceAccessMethod::seek};
-};
+template<typename Config>
+auto CreateCpuIdFactory(const Config& config) noexcept -> std::unique_ptr<ICpuIdFactory>;
 
 }
 

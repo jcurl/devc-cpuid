@@ -6,47 +6,54 @@
 #include "cpuid/cpuid_native_config.h"
 #include "cpuid/cpuid_native.h"
 
-namespace rjcp::cpuid {
-
-template<>
-CpuIdFactory<CpuIdDefaultConfig>::CpuIdFactory() noexcept = default;
-
-template<>
-CpuIdFactory<CpuIdDefaultConfig>::CpuIdFactory(CpuIdDefaultConfig& /* config */) noexcept
+namespace rjcp::cpuid
 {
-    // There is no configuration.
+
+namespace
+{
+template <typename CreationCallback>
+class CpuIdFactoryWithCallback : public ICpuIdFactory
+{
+public:
+    CpuIdFactoryWithCallback(const CreationCallback &create_callback) : create_callback_{create_callback} {};
+
+    auto create(int cpunum) noexcept -> std::unique_ptr<ICpuId> override
+    {
+        return create_callback_(cpunum);
+    }
+
+private:
+    CreationCallback create_callback_;
+};
+
+template <typename CreationCallback>
+auto MakeCpuIdFactory(const CreationCallback &callback) -> std::unique_ptr<ICpuIdFactory>
+{
+    return std::make_unique<CpuIdFactoryWithCallback<CreationCallback>>(callback);
+}
+} // namespace
+
+// TODO: Consider extracting the CreateCpuIdFactory specializations into seperate translation units to decouple the concrete types.
+
+template <>
+auto CreateCpuIdFactory(const CpuIdDefaultConfig &) noexcept -> std::unique_ptr<ICpuIdFactory>
+{
+    return MakeCpuIdFactory([](int cpunum) -> std::unique_ptr<ICpuId>
+                            { return std::make_unique<CpuIdDefault>(cpunum); });
 }
 
-template<>
-auto CpuIdFactory<CpuIdDefaultConfig>::create(int cpunum) noexcept -> std::unique_ptr<ICpuId>
+template <>
+auto CreateCpuIdFactory(const CpuIdDeviceConfig &config) noexcept -> std::unique_ptr<ICpuIdFactory>
 {
-    return std::make_unique<CpuIdDefault>(cpunum);
+    return MakeCpuIdFactory([config](int cpunum) -> std::unique_ptr<ICpuId>
+                            { return std::make_unique<CpuIdDevice>(cpunum, config.method); });
 }
 
-template<>
-CpuIdFactory<CpuIdNativeConfig>::CpuIdFactory() noexcept = default;
-
-template<>
-CpuIdFactory<CpuIdNativeConfig>::CpuIdFactory(CpuIdNativeConfig& /* config */) noexcept
+template <>
+auto CreateCpuIdFactory(const CpuIdNativeConfig &) noexcept -> std::unique_ptr<ICpuIdFactory>
 {
-    // There is no configuration.
-}
-
-template<>
-auto CpuIdFactory<CpuIdNativeConfig>::create(int cpunum) noexcept -> std::unique_ptr<ICpuId>
-{
-    return std::make_unique<CpuIdNative>(cpunum);
-}
-
-CpuIdFactory<CpuIdDeviceConfig>::CpuIdFactory() noexcept = default;
-
-CpuIdFactory<CpuIdDeviceConfig>::CpuIdFactory(CpuIdDeviceConfig& config) noexcept
-    : m_method{config.method}
-{ }
-
-auto CpuIdFactory<CpuIdDeviceConfig>::create(int cpunum) noexcept -> std::unique_ptr<ICpuId>
-{
-    return std::make_unique<CpuIdDevice>(cpunum, m_method);
+    return MakeCpuIdFactory([](int cpunum) -> std::unique_ptr<ICpuId>
+                            { return std::make_unique<CpuIdNative>(cpunum); });
 }
 
 }

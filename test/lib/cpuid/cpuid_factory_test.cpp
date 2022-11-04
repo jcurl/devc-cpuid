@@ -31,48 +31,34 @@ static auto DumpRegisters(ICpuIdFactory& factory, bool isValid)
 
 TEST(CpuIdFactory, CpuIdDefault)
 {
-    CpuIdFactory<CpuIdDefaultConfig> factory{};
-    DumpRegisters(factory, false);
-}
-
-TEST(CpuIdFactory, CpuIdDefaultEmptyConfig)
-{
-    CpuIdDefaultConfig config{};
-    CpuIdFactory<CpuIdDefaultConfig> factory{config};
-    DumpRegisters(factory, false);
+    auto factory = CreateCpuIdFactory(CpuIdDefaultConfig{});
+    DumpRegisters(*factory, false);
 }
 
 TEST(CpuIdFactory, CpuIdNative)
 {
-    CpuIdFactory<CpuIdNativeConfig> factory{};
-    DumpRegisters(factory, true);
-}
-
-TEST(CpuIdFactory, CpuIdNativeEmptyConfig)
-{
-    CpuIdNativeConfig config{};
-    CpuIdFactory<CpuIdNativeConfig> factory{config};
-    DumpRegisters(factory, true);
+    auto factory = CreateCpuIdFactory(CpuIdNativeConfig{});
+    DumpRegisters(*factory, true);
 }
 
 TEST(CpuIdFactory, CpuIdDeviceDefault)
 {
-    CpuIdFactory<CpuIdDeviceConfig> factory{};
-    DumpRegisters(factory, true);
+    auto factory = CreateCpuIdFactory(CpuIdDeviceConfig{});
+    DumpRegisters(*factory, true);
 }
 
 TEST(CpuIdFactory, CpuIdDeviceSeek)
 {
     CpuIdDeviceConfig config{DeviceAccessMethod::seek};
-    CpuIdFactory<CpuIdDeviceConfig> factory{config};
-    DumpRegisters(factory, true);
+    auto factory = CreateCpuIdFactory(config);
+    DumpRegisters(*factory, true);
 }
 
 TEST(CpuIdFactory, CpuIdDevicePread)
 {
     CpuIdDeviceConfig config{DeviceAccessMethod::pread};
-    CpuIdFactory<CpuIdDeviceConfig> factory{config};
-    DumpRegisters(factory, true);
+    auto factory = CreateCpuIdFactory(config);
+    DumpRegisters(*factory, true);
 }
 
 }

@@ -4,6 +4,11 @@ project(devc-cpuid C CXX)
 option(ENABLE_CLANG_TIDY "Enable checks using Clang-Tidy if available" ON)
 option(ENABLE_TEST "Enable building tests" ON)
 
+string(TOUPPER "${CMAKE_BUILD_TYPE}" upper_CMAKE_BUILD_TYPE)
+if(upper_CMAKE_BUILD_TYPE MATCHES "^(DEBUG|)$")
+    set(IS_DEBUG ON)
+endif()
+
 # See https://github.com/arsenm/sanitizers-cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/sanitizers" ${CMAKE_MODULE_PATH})
 find_package(Sanitizers)
@@ -30,6 +35,9 @@ if("${CMAKE_CXX_FLAGS}" STREQUAL "")
     if((CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang") OR
        (CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR
        (CMAKE_CXX_COMPILER_ID MATCHES "QCC"))
+        if (IS_DEBUG)
+            add_compile_options(-g)
+        endif()
         add_compile_options(-Wall -Wextra)
     endif()
 endif()

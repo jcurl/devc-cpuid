@@ -5,12 +5,22 @@ abstract class ICpuIdFactory {
     +~ICpuIdFactory() = default
 }
 
-class CpuIdFactory<T> {
-    +CpuIdFactory()
-    +CpuIdFactory(config: T&);
-    +create(cpunum: int) : unique_ptr<ICpuId>
+class " " as Global <<(G,#FF7700) global free>> {
+    +CreateCpuIdFactory(config: const Config&) :\n    std::unique_ptr<ICpuIdFactory>
 }
 
-ICpuIdFactory <|.d. CpuIdFactory
+class CpuIdFactoryWithCallback<CreationCallback> {
+    +CpuIdFactoryWithCallback(callback: CreationCallback&)
+    +create(cpunum: int) : unique_ptr<ICpuId>
+}
+note bottom
+    The `create` method then uses
+    the callback to instantiate the
+    `ICpuId` object.
+end note
+
+ICpuIdFactory <|.d. CpuIdFactoryWithCallback
+
+Global::CreateCpuIdFactory -r-> CpuIdFactoryWithCallback::CpuIdFactoryWithCallback
 
 @enduml

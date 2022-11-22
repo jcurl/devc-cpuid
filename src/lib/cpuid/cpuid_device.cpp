@@ -59,7 +59,7 @@ auto CpuIdDevice::GetCpuId(std::int32_t eax, std::int32_t ecx) noexcept -> const
     int oebx = buffer[4] | (buffer[5] << 8) | (buffer[6] << 16) | (buffer[7] << 24);     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     int oecx = buffer[8] | (buffer[9] << 8) | (buffer[10] << 16) | (buffer[11] << 24);   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     int oedx = buffer[12] | (buffer[13] << 8) | (buffer[14] << 16) | (buffer[15] << 24); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    return CpuIdRegister{oeax, oebx, oecx, oedx};
+    return CpuIdRegister{eax, ecx, oeax, oebx, oecx, oedx};
 }
 
 }

@@ -17,7 +17,7 @@ auto CpuIdNative::GetCpuIdCurrentThread(std::int32_t eax, std::int32_t ecx) noex
         : "a"(eax), "c"(ecx)
         );
 
-    return CpuIdRegister{oeax, oebx, oecx, oedx};
+    return CpuIdRegister{eax, ecx, oeax, oebx, oecx, oedx};
 }
 
 }

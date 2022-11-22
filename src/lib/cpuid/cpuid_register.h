@@ -21,12 +21,14 @@ public:
     /**
      * @brief Construct a new Cpu Id Register object
      *
+     * @param ieax The input EAX register
+     * @param iecx The input ECX register
      * @param eax The result of the CPUID instruction EAX register
      * @param ebx The result of the CPUID instruction EBX register
      * @param ecx The result of the CPUID instruction ECX register
      * @param edx The result of the CPUID instruction EDX register
      */
-    CpuIdRegister(std::int32_t eax, std::int32_t ebx, std::int32_t ecx, std::int32_t edx) noexcept;
+    CpuIdRegister(std::int32_t ieax, std::int32_t iecx, std::int32_t eax, std::int32_t ebx, std::int32_t ecx, std::int32_t edx) noexcept;
 
     /**
      * @brief Indicates if the register data is valid.
@@ -38,6 +40,20 @@ public:
      * @return false The data is not valid.
      */
     auto IsValid() const noexcept -> bool;
+
+    /**
+     * @brief The input CPUID EAX register.
+     *
+     * @return std::int32_t The value used to get the results.
+     */
+    auto InEax() const noexcept -> std::int32_t;
+
+    /**
+     * @brief The input CPUID ECX register
+     *
+     * @return std::int32_t The value used to get the results.
+     */
+    auto InEcx() const noexcept -> std::int32_t;
 
     /**
      * @brief The result of the CPUID instruction EAX register
@@ -68,6 +84,8 @@ public:
     auto Edx() const noexcept -> std::int32_t;
 
 private:
+    std::int32_t m_InEax;
+    std::int32_t m_InEcx;
     std::int32_t m_Eax;
     std::int32_t m_Ebx;
     std::int32_t m_Ecx;

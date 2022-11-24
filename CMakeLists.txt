@@ -21,9 +21,8 @@ if(ENABLE_CLANG_TIDY)
         set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}"
             "-checks=bugprone-*,\
                     modernize-*,\
-                    cppcoreguidelines-*,\
-                    -clang-diagnostic-unused-const-variable,\
-                    -clang-diagnostic-c++17-extensions")
+                    cppcoreguidelines-*,-cppcoreguidelines-avoid-magic-numbers,\
+                    -clang-diagnostic-unused-const-variable,-clang-diagnostic-c++17-extensions")
     else()
         message(STATUS "LLVM clang-tidy is enabled but NOT found")
     endif()

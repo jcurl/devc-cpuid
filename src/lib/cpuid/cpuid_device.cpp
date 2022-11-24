@@ -28,11 +28,11 @@ auto CpuIdDevice::GetCpuId(std::int32_t eax, std::int32_t ecx) noexcept -> const
         return CpuIdRegister{};
     }
 
-    std::vector<uint8_t> buffer(16);                                                     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    std::vector<uint8_t> buffer(16);
 
     // We provide two different methods for testing. Under QNX, the pread must
     // be handled explicitly and is different to read.
-    std::size_t pos = eax | static_cast<std::size_t>(ecx) << 32;                         // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    std::size_t pos = eax | static_cast<std::size_t>(ecx) << 32;
     if (m_method == DeviceAccessMethod::seek) {
         auto seek = os::qnx::native::file::lseek64(m_device, pos);
         if (!seek) {
@@ -55,10 +55,10 @@ auto CpuIdDevice::GetCpuId(std::int32_t eax, std::int32_t ecx) noexcept -> const
         }
     }
 
-    int oeax = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    int oebx = buffer[4] | (buffer[5] << 8) | (buffer[6] << 16) | (buffer[7] << 24);     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    int oecx = buffer[8] | (buffer[9] << 8) | (buffer[10] << 16) | (buffer[11] << 24);   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    int oedx = buffer[12] | (buffer[13] << 8) | (buffer[14] << 16) | (buffer[15] << 24); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    int oeax = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+    int oebx = buffer[4] | (buffer[5] << 8) | (buffer[6] << 16) | (buffer[7] << 24);
+    int oecx = buffer[8] | (buffer[9] << 8) | (buffer[10] << 16) | (buffer[11] << 24);
+    int oedx = buffer[12] | (buffer[13] << 8) | (buffer[14] << 16) | (buffer[15] << 24);
     return CpuIdRegister{eax, ecx, oeax, oebx, oecx, oedx};
 }
 

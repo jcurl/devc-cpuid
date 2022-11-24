@@ -48,7 +48,7 @@ TEST(CpuIdDevice, ValueLseek)
 
 TEST(CpuIdDevice, InvalidCpu)
 {
-    CpuIdDevice cpuid = CpuIdDevice{256};  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    CpuIdDevice cpuid = CpuIdDevice{256};
     CpuIdRegister cpuidreg = cpuid.GetCpuId(0x00000000, 0x00000000);
 
     ASSERT_FALSE(cpuidreg.IsValid());

@@ -89,7 +89,6 @@ auto coffset(std::size_t seek) -> T
     if constexpr (sizeof(std::size_t) == sizeof(T) && sizeof(T) >= min_off_size)
         return static_cast<T>(seek);
     else {
-        // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
         static_assert(
             sizeof(std::size_t) == sizeof(T) && sizeof(T) >= min_off_size,
             "std::size_t and T must be of same size and 64-bit (i.e. enable large file support)");

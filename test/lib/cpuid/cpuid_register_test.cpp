@@ -8,8 +8,8 @@ TEST(CpuIdRegister, DefaultValue)
 {
     CpuIdRegister cpuidreg{};
     ASSERT_FALSE(cpuidreg.IsValid());
-    ASSERT_EQ(cpuidreg.InEax(), -1);
-    ASSERT_EQ(cpuidreg.InEcx(), -1);
+    ASSERT_EQ(cpuidreg.InEax(), 0xFFFFFFFF);
+    ASSERT_EQ(cpuidreg.InEcx(), 0xFFFFFFFF);
     ASSERT_EQ(cpuidreg.Eax(), 0);
     ASSERT_EQ(cpuidreg.Ebx(), 0);
     ASSERT_EQ(cpuidreg.Ecx(), 0);

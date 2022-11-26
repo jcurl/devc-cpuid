@@ -20,7 +20,7 @@ CpuIdDevice::CpuIdDevice(int cpunum, DeviceAccessMethod method) noexcept
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto CpuIdDevice::GetCpuId(std::int32_t eax, std::int32_t ecx) noexcept -> const CpuIdRegister
+auto CpuIdDevice::GetCpuId(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister
 {
     if (!m_device) {
         // Device couldn't be opened, so return the default. For example, this
@@ -55,10 +55,10 @@ auto CpuIdDevice::GetCpuId(std::int32_t eax, std::int32_t ecx) noexcept -> const
         }
     }
 
-    int oeax = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-    int oebx = buffer[4] | (buffer[5] << 8) | (buffer[6] << 16) | (buffer[7] << 24);
-    int oecx = buffer[8] | (buffer[9] << 8) | (buffer[10] << 16) | (buffer[11] << 24);
-    int oedx = buffer[12] | (buffer[13] << 8) | (buffer[14] << 16) | (buffer[15] << 24);
+    std::uint32_t oeax = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+    std::uint32_t oebx = buffer[4] | (buffer[5] << 8) | (buffer[6] << 16) | (buffer[7] << 24);
+    std::uint32_t oecx = buffer[8] | (buffer[9] << 8) | (buffer[10] << 16) | (buffer[11] << 24);
+    std::uint32_t oedx = buffer[12] | (buffer[13] << 8) | (buffer[14] << 16) | (buffer[15] << 24);
     return CpuIdRegister{eax, ecx, oeax, oebx, oecx, oedx};
 }
 

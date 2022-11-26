@@ -28,7 +28,7 @@ public:
      * @param ecx The minor leaf (ECX register) to query.
      * @return CpuIdRegister The result of the query.
      */
-    auto GetCpuId(std::int32_t eax, std::int32_t ecx) noexcept -> const CpuIdRegister override;
+    auto GetCpuId(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister override;
 };
 
 }

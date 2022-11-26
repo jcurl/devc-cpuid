@@ -29,7 +29,7 @@ public:
      * @param ecx The minor leaf (ECX register) to query.
      * @return CpuIdRegister The result of the query.
      */
-    auto GetCpuId(std::int32_t eax, std::int32_t ecx) noexcept -> const CpuIdRegister override;
+    auto GetCpuId(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister override;
 
 private:
     /**
@@ -43,7 +43,7 @@ private:
      * @param ecx The minor leaf (ECX register) to query.
      * @return CpuIdRegister The result of the query.
      */
-    static auto GetCpuIdCurrentThread(std::int32_t eax, std::int32_t ecx) noexcept -> const CpuIdRegister;
+    static auto GetCpuIdCurrentThread(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister;
 
     int m_cpunum;
 };

@@ -7,6 +7,9 @@ set(SOURCES
     cpuid/cpuid_factory_test.cpp
     cpuid/cpuid_native_test.cpp
     cpuid/cpuid_register_test.cpp
+    cpuid/tree/cpuid_processor_test.cpp
+    cpuid/tree/cpuid_tree_test.cpp
+    cpuid/tree/cpuid_write_xml_test.cpp
     os/qnx/native/file/file_test.cpp
     os/qnx/native/filehandle_type.c
     os/qnx/native/opaque_type.c

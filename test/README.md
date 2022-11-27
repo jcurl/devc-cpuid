@@ -31,3 +31,20 @@ specific to QNX can only run on a QNX target.
 
 Rationale for this is to allow a faster write, compile and test cycle where
 possible.
+
+## Manually Running Coverage
+
+If you've successfully used the option with code coverage, you can generate
+coverage for a specific test case as:
+
+```sh
+export BASEDIR=/home/jcurl/source/devc-cpuid
+export BUILDDIR=${BASEDIR}/build_lin
+
+cd ${BUILDDIR}/test/lib
+lcov --directory ${BUILDDIR} --zerocounters
+./devc-cpuid-test --gtest_filter=*Move*
+mkdir ccov
+lcov --directory ${BUILDDIR}/ --base-directory ${BASEDIR}/ --no-external --capture --output-file ./ccov/test.info
+genhtml -o ./ccov ./ccov/test.info
+```

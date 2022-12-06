@@ -10,7 +10,7 @@ namespace rjcp::cpuid::tree {
 class CpuIdTree
 {
 private:
-    using CpuIdMap = std::map<int, CpuIdProcessor>;
+    using CpuIdMap = std::map<unsigned int, CpuIdProcessor>;
 
 public:
     /**
@@ -65,7 +65,7 @@ public:
      * @return CpuIdProcessor* The processor object that exists, or nullptr if
      * it doesn't exist,
      */
-    auto GetProcessor(int cpu) -> const CpuIdProcessor*;
+    auto GetProcessor(unsigned int cpu) -> const CpuIdProcessor*;
 
     /**
      * @brief Set the Processor object for the given CPU.
@@ -75,7 +75,7 @@ public:
      * @return true The object was set.
      * @return false The object already exists and was not set.
      */
-    auto SetProcessor(int cpu, const CpuIdProcessor& tree) -> bool;
+    auto SetProcessor(unsigned int cpu, const CpuIdProcessor& tree) -> bool;
 
     /**
      * @brief Set the Processor object for the given CPU.
@@ -85,7 +85,7 @@ public:
      * @return true The object was set.
      * @return false The object already exists and was not set.
      */
-    auto SetProcessor(int cpu, CpuIdProcessor&& tree) -> bool;
+    auto SetProcessor(unsigned int cpu, CpuIdProcessor&& tree) -> bool;
 
     /**
      * @brief Get the number of processors defined in this data structure.
@@ -151,7 +151,7 @@ private:
     CpuIdMap m_registers{};
 
     template<typename T>
-    auto SetProcessorInternal(int cpu, T&& tree) -> bool;
+    auto SetProcessorInternal(unsigned int cpu, T&& tree) -> bool;
 };
 
 }

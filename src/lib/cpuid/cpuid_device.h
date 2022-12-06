@@ -25,7 +25,7 @@ public:
      * @param cpunum The CPU number to configure for.
      * @param method How to access the device using lseek64/read or pread64.
      */
-    CpuIdDevice(int cpunum, DeviceAccessMethod method = DeviceAccessMethod::seek) noexcept;
+    CpuIdDevice(unsigned int cpunum, DeviceAccessMethod method = DeviceAccessMethod::seek) noexcept;
 
     /**
      * @brief Get the CPUID for the given EAX and ECX registers.

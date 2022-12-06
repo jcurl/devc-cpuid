@@ -2,7 +2,7 @@
 
 namespace rjcp::cpuid {
 
-CpuIdDefault::CpuIdDefault(int /* cpunum */) noexcept
+CpuIdDefault::CpuIdDefault(unsigned int /* cpunum */) noexcept
 {
     /* Nothing to do, we're CPU independent for default data */
 }

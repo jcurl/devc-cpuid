@@ -4,7 +4,7 @@
 
 namespace rjcp::cpuid {
 
-CpuIdNative::CpuIdNative(int cpunum) noexcept
+CpuIdNative::CpuIdNative(unsigned int cpunum) noexcept
     : m_cpunum(cpunum) { }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)

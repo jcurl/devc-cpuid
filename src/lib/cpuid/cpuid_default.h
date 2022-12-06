@@ -17,7 +17,7 @@ public:
      *
      * @param cpunum The CPU number to configure for.
      */
-    CpuIdDefault(int cpunum) noexcept;
+    CpuIdDefault(unsigned int cpunum) noexcept;
 
     /**
      * @brief Get the CPUID for the given EAX and ECX registers.

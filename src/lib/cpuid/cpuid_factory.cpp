@@ -20,7 +20,7 @@ public:
     : m_create_callback{create_callback}
     { };
 
-    auto create(int cpunum) noexcept -> std::unique_ptr<ICpuId> override
+    auto create(unsigned int cpunum) noexcept -> std::unique_ptr<ICpuId> override
     {
         return m_create_callback(cpunum);
     }
@@ -43,21 +43,21 @@ auto MakeCpuIdFactory(const CreationCallback& callback) -> std::unique_ptr<ICpuI
 template <>
 auto CreateCpuIdFactory(const CpuIdDefaultConfig &) noexcept -> std::unique_ptr<ICpuIdFactory>
 {
-    return MakeCpuIdFactory([](int cpunum) -> std::unique_ptr<ICpuId>
+    return MakeCpuIdFactory([](unsigned int cpunum) -> std::unique_ptr<ICpuId>
                             { return std::make_unique<CpuIdDefault>(cpunum); });
 }
 
 template <>
 auto CreateCpuIdFactory(const CpuIdDeviceConfig &config) noexcept -> std::unique_ptr<ICpuIdFactory>
 {
-    return MakeCpuIdFactory([config](int cpunum) -> std::unique_ptr<ICpuId>
+    return MakeCpuIdFactory([config](unsigned int cpunum) -> std::unique_ptr<ICpuId>
                             { return std::make_unique<CpuIdDevice>(cpunum, config.method); });
 }
 
 template <>
 auto CreateCpuIdFactory(const CpuIdNativeConfig &) noexcept -> std::unique_ptr<ICpuIdFactory>
 {
-    return MakeCpuIdFactory([](int cpunum) -> std::unique_ptr<ICpuId>
+    return MakeCpuIdFactory([](unsigned int cpunum) -> std::unique_ptr<ICpuId>
                             { return std::make_unique<CpuIdNative>(cpunum); });
 }
 

@@ -14,7 +14,7 @@ auto CpuIdTree::operator=(CpuIdTree&& tree) -> CpuIdTree&
     return *this;
 }
 
-auto CpuIdTree::GetProcessor(int cpu) -> const CpuIdProcessor*
+auto CpuIdTree::GetProcessor(unsigned int cpu) -> const CpuIdProcessor*
 {
     auto result = m_registers.find(cpu);
     if (result == m_registers.cend()) return nullptr;
@@ -22,21 +22,19 @@ auto CpuIdTree::GetProcessor(int cpu) -> const CpuIdProcessor*
 }
 
 template<typename T>
-auto CpuIdTree::SetProcessorInternal(int cpu, T&& tree) -> bool
+auto CpuIdTree::SetProcessorInternal(unsigned int cpu, T&& tree) -> bool
 {
-    if (cpu < 0) return false;
-
     auto value = m_registers.emplace(
         std::make_pair(cpu, std::forward<T>(tree)));
     return value.second;
 }
 
-auto CpuIdTree::SetProcessor(int cpu, const CpuIdProcessor& tree) -> bool
+auto CpuIdTree::SetProcessor(unsigned int cpu, const CpuIdProcessor& tree) -> bool
 {
     return SetProcessorInternal(cpu, tree);
 }
 
-auto CpuIdTree::SetProcessor(int cpu, CpuIdProcessor&& tree) -> bool
+auto CpuIdTree::SetProcessor(unsigned int cpu, CpuIdProcessor&& tree) -> bool
 {
     return SetProcessorInternal(cpu, std::move(tree));
 }

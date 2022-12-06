@@ -8,7 +8,7 @@
 
 namespace rjcp::cpuid {
 
-CpuIdDevice::CpuIdDevice(int cpunum, DeviceAccessMethod method) noexcept
+CpuIdDevice::CpuIdDevice(unsigned int cpunum, DeviceAccessMethod method) noexcept
     : m_method{method}
 {
     std::ostringstream device;

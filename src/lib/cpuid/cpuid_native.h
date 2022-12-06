@@ -17,7 +17,7 @@ public:
      *
      * @param cpunum The CPU number to configure for.
      */
-    CpuIdNative(int cpunum) noexcept;
+    CpuIdNative(unsigned int cpunum) noexcept;
 
     /**
      * @brief Get the CPUID for the given EAX and ECX registers.
@@ -45,7 +45,7 @@ private:
      */
     static auto GetCpuIdCurrentThread(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister;
 
-    int m_cpunum;
+    unsigned int m_cpunum;
 };
 
 }

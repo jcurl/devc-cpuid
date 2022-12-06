@@ -18,7 +18,7 @@ public:
      * @param cpunum The CPU object to create for.
      * @return ICpuId The object that can be used to get CPUID information.
      */
-    virtual auto create(int cpunum) noexcept -> std::unique_ptr<ICpuId> = 0;
+    virtual auto create(unsigned int cpunum) noexcept -> std::unique_ptr<ICpuId> = 0;
 
     /**
      * @brief Destroy the ICpuIdFactory object

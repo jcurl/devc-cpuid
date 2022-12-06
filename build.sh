@@ -10,7 +10,7 @@ function build_qnx() {
 
     cmake -S . -B build_qnx -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=toolchain/qcc710_x86_64 && \
     cd build_qnx && \
-    make
+    make -j4
 
     cd ${CWD}
 }
@@ -25,7 +25,7 @@ function build_linux() {
 
     cmake -S . -B build_lin -DSANITIZE_ADDRESS=on -DCODE_COVERAGE=on && \
     cd build_lin && \
-    make
+    make -j4
 
     cd ${CWD}
 }
@@ -40,7 +40,7 @@ function build_linux_release() {
 
     cmake -S . -B build_lin_rel -DCMAKE_BUILD_TYPE=Release && \
     cd build_lin_rel && \
-    make
+    make -j4
 
     cd ${CWD}
 }
@@ -55,7 +55,7 @@ function build_clang() {
 
     cmake -S . -B build_clang -DCMAKE_TOOLCHAIN_FILE=toolchain/clang -DSANITIZE_ADDRESS=on -DCODE_COVERAGE=on && \
     cd build_clang && \
-    make
+    make -j4
 
     cd ${CWD}
 }

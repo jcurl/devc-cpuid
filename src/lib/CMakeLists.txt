@@ -8,6 +8,7 @@ set(SOURCES
     cpuid/cpuid_factory.cpp
     cpuid/cpuid_native.cpp
     cpuid/cpuid_register.cpp
+    cpuid/get_cpuid.cpp
     cpuid/tree/cpuid_processor.cpp
     cpuid/tree/cpuid_tree.cpp
     cpuid/tree/cpuid_write_xml.cpp

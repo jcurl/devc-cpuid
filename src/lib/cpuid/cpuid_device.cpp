@@ -20,7 +20,7 @@ CpuIdDevice::CpuIdDevice(unsigned int cpunum, DeviceAccessMethod method) noexcep
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto CpuIdDevice::GetCpuId(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister
+auto CpuIdDevice::GetCpuId(std::uint32_t eax, std::uint32_t ecx) const noexcept -> const CpuIdRegister
 {
     if (!m_device) {
         // Device couldn't be opened, so return the default. For example, this

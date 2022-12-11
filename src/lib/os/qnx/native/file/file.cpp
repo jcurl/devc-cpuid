@@ -26,7 +26,7 @@ auto open(const std::string& fileName, int flags) noexcept -> expected<FileHandl
     return FileHandle{fd};
 }
 
-auto read(FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t count) noexcept -> expected<std::size_t>
+auto read(const FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t count) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -39,7 +39,7 @@ auto read(FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t count) noe
     return static_cast<std::size_t>(bytes);
 }
 
-auto read(FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count) noexcept -> expected<std::size_t>
+auto read(const FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -56,7 +56,7 @@ auto read(FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t offset, st
     return static_cast<std::size_t>(bytes);
 }
 
-auto read(FileHandle& fd, uint8_t* buf, std::size_t count) noexcept -> expected<std::size_t>
+auto read(const FileHandle& fd, uint8_t* buf, std::size_t count) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -96,7 +96,7 @@ auto coffset(std::size_t seek) -> T
     }
 }
 
-auto lseek(FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>
+auto lseek(const FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -108,7 +108,7 @@ auto lseek(FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>
     return static_cast<std::size_t>(offset);
 }
 
-auto lseek64(FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>
+auto lseek64(const FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -121,7 +121,7 @@ auto lseek64(FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto pread(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
+auto pread(const FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -135,7 +135,7 @@ auto pread(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, st
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto pread(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
+auto pread(const FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -149,7 +149,7 @@ auto pread(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, s
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto pread(FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
+auto pread(const FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -161,7 +161,7 @@ auto pread(FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) no
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto pread64(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
+auto pread64(const FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -176,7 +176,7 @@ auto pread64(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, 
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto pread64(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
+auto pread64(const FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);
@@ -191,7 +191,7 @@ auto pread64(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset,
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto pread64(FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
+auto pread64(const FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>
 {
     if (!fd)
         return stdext::make_unexpected(EINVAL);

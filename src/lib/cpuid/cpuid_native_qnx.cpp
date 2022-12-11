@@ -6,7 +6,7 @@
 
 namespace rjcp::cpuid {
 
-auto CpuIdNative::GetCpuId(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister
+auto CpuIdNative::GetCpuId(std::uint32_t eax, std::uint32_t ecx) const noexcept -> const CpuIdRegister
 {
     unsigned int runmask = 1 << m_cpunum;
     int result = ThreadCtl(_NTO_TCTL_RUNMASK_GET_AND_SET, &runmask);

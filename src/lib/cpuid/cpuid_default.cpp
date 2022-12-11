@@ -8,7 +8,7 @@ CpuIdDefault::CpuIdDefault(unsigned int /* cpunum */) noexcept
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto CpuIdDefault::GetCpuId(std::uint32_t /* eax */, std::uint32_t /* ecx */) noexcept -> const CpuIdRegister
+auto CpuIdDefault::GetCpuId(std::uint32_t /* eax */, std::uint32_t /* ecx */) const noexcept -> const CpuIdRegister
 {
     return CpuIdRegister{};
 }

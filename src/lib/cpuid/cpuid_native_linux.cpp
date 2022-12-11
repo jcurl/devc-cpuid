@@ -4,7 +4,7 @@
 
 namespace rjcp::cpuid {
 
-auto CpuIdNative::GetCpuId(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister
+auto CpuIdNative::GetCpuId(std::uint32_t eax, std::uint32_t ecx) const noexcept -> const CpuIdRegister
 {
     pthread_t thread = pthread_self();
     cpu_set_t current;

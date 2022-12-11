@@ -17,7 +17,7 @@ public:
      * @param ecx The value of ECX to query for.
      * @return CpuIdRegister The results of the query.
      */
-    virtual auto GetCpuId(std::uint32_t eax, std::uint32_t ecx) noexcept -> const CpuIdRegister = 0;
+    virtual auto GetCpuId(std::uint32_t eax, std::uint32_t ecx) const noexcept -> const CpuIdRegister = 0;
 
     /**
      * @brief Destroy the ICpuId object

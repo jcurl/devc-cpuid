@@ -80,7 +80,7 @@ auto open(const std::string& fileName, int flags) noexcept -> expected<FileHandl
  * @param count The maximum number of bytes.
  * @return std::size_t The number of bytes read.
  */
-auto read(FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t count) noexcept -> expected<std::size_t>;
+auto read(const FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t count) noexcept -> expected<std::size_t>;
 
 /**
  * @brief Read from the file handle into the buffer provided, not more than
@@ -92,7 +92,7 @@ auto read(FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t count) noe
  * @param count The maximum number of bytes.
  * @return int The number of bytes read, or -1 on error.
  */
-auto read(FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count) noexcept -> expected<std::size_t>;
+auto read(const FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count) noexcept -> expected<std::size_t>;
 
 /**
  * @brief Read from the file handle into the buffer provided, not more than
@@ -103,7 +103,7 @@ auto read(FileHandle& fd, std::vector<std::uint8_t>& buf, std::size_t offset, st
  * @param count The maximum number of bytes.
  * @return int The number of bytes read, or -1 on error.
  */
-auto read(FileHandle& fd, uint8_t* buf, std::size_t count) noexcept -> expected<std::size_t>;
+auto read(const FileHandle& fd, uint8_t* buf, std::size_t count) noexcept -> expected<std::size_t>;
 
 /**
  * @brief Seeks to a specific position in the file
@@ -112,7 +112,7 @@ auto read(FileHandle& fd, uint8_t* buf, std::size_t count) noexcept -> expected<
  * @param seek The offset in the file to seek to, from the beginning
  * @return off_t The offset in the file, or -1 on error.
  */
-auto lseek(FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>;
+auto lseek(const FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>;
 
 /**
  * @brief Seeks to a specific position in the large file
@@ -121,7 +121,7 @@ auto lseek(FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>;
  * @param seek The offset in the file to seek to, from the beginning
  * @return off64_t The offset in the file, or -1 on error.
  */
-auto lseek64(FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>;
+auto lseek64(const FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>;
 
 /**
  * @brief Reads from the file at a specific position
@@ -132,41 +132,7 @@ auto lseek64(FileHandle &fd, std::size_t seek) noexcept -> expected<std::size_t>
  * @param seek The offset in the file to seek to, from the beginning
  * @return int The number of bytes read, or -1 on error.
  */
-auto pread(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
-
-/**
- * @brief Reads from the file at a specific position
- *
- * @param fd The file handle
- * @param buf The buffer to put the results.
- * @param offset The offset in the buffer to put the results.
- * @param count The maximum number of bytes.
- * @param seek The offset in the file to seek to, from the beginning
- * @return int The number of bytes read, or -1 on error.
- */
-auto pread(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
-
-/**
- * @brief Reads from the file at a specific position
- *
- * @param fd The file handle
- * @param buf The buffer to put the results.
- * @param count The maximum number of bytes.
- * @param seek The offset in the file to seek to, from the beginning
- * @return int The number of bytes read, or -1 on error.
- */
-auto pread(FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
-
-/**
- * @brief Reads from the file at a specific position
- *
- * @param fd The file handle
- * @param buf The buffer to put the results.
- * @param count The maximum number of bytes.
- * @param seek The offset in the file to seek to, from the beginning
- * @return int The number of bytes read, or -1 on error.
- */
-auto pread64(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
+auto pread(const FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
 
 /**
  * @brief Reads from the file at a specific position
@@ -178,7 +144,7 @@ auto pread64(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, 
  * @param seek The offset in the file to seek to, from the beginning
  * @return int The number of bytes read, or -1 on error.
  */
-auto pread64(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
+auto pread(const FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
 
 /**
  * @brief Reads from the file at a specific position
@@ -189,7 +155,41 @@ auto pread64(FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset,
  * @param seek The offset in the file to seek to, from the beginning
  * @return int The number of bytes read, or -1 on error.
  */
-auto pread64(FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
+auto pread(const FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
+
+/**
+ * @brief Reads from the file at a specific position
+ *
+ * @param fd The file handle
+ * @param buf The buffer to put the results.
+ * @param count The maximum number of bytes.
+ * @param seek The offset in the file to seek to, from the beginning
+ * @return int The number of bytes read, or -1 on error.
+ */
+auto pread64(const FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
+
+/**
+ * @brief Reads from the file at a specific position
+ *
+ * @param fd The file handle
+ * @param buf The buffer to put the results.
+ * @param offset The offset in the buffer to put the results.
+ * @param count The maximum number of bytes.
+ * @param seek The offset in the file to seek to, from the beginning
+ * @return int The number of bytes read, or -1 on error.
+ */
+auto pread64(const FileHandle &fd, std::vector<std::uint8_t>& buf, std::size_t offset, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
+
+/**
+ * @brief Reads from the file at a specific position
+ *
+ * @param fd The file handle
+ * @param buf The buffer to put the results.
+ * @param count The maximum number of bytes.
+ * @param seek The offset in the file to seek to, from the beginning
+ * @return int The number of bytes read, or -1 on error.
+ */
+auto pread64(const FileHandle &fd, uint8_t *buf, std::size_t count, std::size_t seek) noexcept -> expected<std::size_t>;
 
 }
 

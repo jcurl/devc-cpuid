@@ -111,7 +111,7 @@ public:
      *
      * @return int The number of registers defined in this data structure.
      */
-    auto Size() const -> std::size_t;
+    auto Size() const noexcept -> std::size_t;
 
     /**
      * @brief Test if this data structure has any CPUID leafs.
@@ -119,7 +119,7 @@ public:
      * @return true There is at least one leaf defined in this data structure.
      * @return false There are no leaves defined in this data structure.
      */
-    auto IsEmpty() const -> bool;
+    auto IsEmpty() const noexcept -> bool;
 
     /**
      * @brief The type for the iterator.

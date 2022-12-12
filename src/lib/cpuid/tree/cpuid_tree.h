@@ -65,7 +65,7 @@ public:
      * @return CpuIdProcessor* The processor object that exists, or nullptr if
      * it doesn't exist,
      */
-    auto GetProcessor(unsigned int cpu) -> const CpuIdProcessor*;
+    auto GetProcessor(unsigned int cpu) const -> const CpuIdProcessor*;
 
     /**
      * @brief Set the Processor object for the given CPU.
@@ -92,7 +92,7 @@ public:
      *
      * @return int The number of processors defined in this data structure.
      */
-    auto Size() -> std::size_t;
+    auto Size() const noexcept -> std::size_t;
 
     /**
      * @brief Test if this data structure has any processors defined.
@@ -101,7 +101,7 @@ public:
      * structure.
      * @return false There are no processors defined in this data structure.
      */
-    auto IsEmpty() -> bool;
+    auto IsEmpty() const noexcept -> bool;
 
     /**
      * @brief The type for the iterator.

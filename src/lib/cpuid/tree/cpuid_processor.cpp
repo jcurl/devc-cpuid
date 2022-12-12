@@ -41,12 +41,12 @@ auto CpuIdProcessor::AddLeaf(CpuIdRegister&& cpureg) -> bool
     return AddLeafInternal(std::move(cpureg));
 }
 
-auto CpuIdProcessor::Size() const -> std::size_t
+auto CpuIdProcessor::Size() const noexcept -> std::size_t
 {
     return m_node.size();
 }
 
-auto CpuIdProcessor::IsEmpty() const -> bool
+auto CpuIdProcessor::IsEmpty() const noexcept -> bool
 {
     return m_node.size() == 0;
 }

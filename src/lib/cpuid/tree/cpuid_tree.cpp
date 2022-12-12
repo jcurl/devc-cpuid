@@ -14,7 +14,7 @@ auto CpuIdTree::operator=(CpuIdTree&& tree) -> CpuIdTree&
     return *this;
 }
 
-auto CpuIdTree::GetProcessor(unsigned int cpu) -> const CpuIdProcessor*
+auto CpuIdTree::GetProcessor(unsigned int cpu) const -> const CpuIdProcessor*
 {
     auto result = m_registers.find(cpu);
     if (result == m_registers.cend()) return nullptr;
@@ -39,12 +39,12 @@ auto CpuIdTree::SetProcessor(unsigned int cpu, CpuIdProcessor&& tree) -> bool
     return SetProcessorInternal(cpu, std::move(tree));
 }
 
-auto CpuIdTree::Size() -> std::size_t
+auto CpuIdTree::Size() const noexcept -> std::size_t
 {
     return m_registers.size();
 }
 
-auto CpuIdTree::IsEmpty() -> bool
+auto CpuIdTree::IsEmpty() const noexcept -> bool
 {
     return m_registers.size() == 0;
 }

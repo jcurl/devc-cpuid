@@ -61,6 +61,15 @@ auto GetCpuId(ICpuIdFactory& factory) -> std::unique_ptr<tree::CpuIdTree>
     return tree;
 }
 
+/**
+ * @brief Get the CpuId Registers for Intel and AMD.
+ *
+ * When comparing Intel with AMD, they don't overlap, so while the bits have
+ * different meanings in some cases, the same algorithm works for both.
+ *
+ * @param cpuid The CPUID object to get the CPUID information.
+ * @param processor The tree to put the CPUID information after the query.
+ */
 void GetCpuIdIntelStandard(ICpuId& cpuid, tree::CpuIdProcessor& processor)
 {
     const CpuIdRegister* reg0 = processor.GetLeaf(0, 0);
@@ -69,7 +78,7 @@ void GetCpuIdIntelStandard(ICpuId& cpuid, tree::CpuIdProcessor& processor)
     std::uint32_t leafs = reg0->Eax();
     std::uint32_t leaf = 1;
     bool sgx = false;
-    while (leaf <= leafs) {
+    while (leaf <= leafs && leaf <= 0xFFFF) {
         switch (leaf) {
         case 4: {
             CpuIdRegister reg = cpuid.GetCpuId(leaf, 0);
@@ -77,7 +86,7 @@ void GetCpuIdIntelStandard(ICpuId& cpuid, tree::CpuIdProcessor& processor)
                 processor.AddLeaf(reg);
 
                 std::uint32_t subleaf = 1;
-                while (reg.IsValid() && (reg.Eax() & 0x0000001F)) {
+                while (subleaf < 0xFF && reg.IsValid() && (reg.Eax() & 0x0000001F)) {
                     reg = cpuid.GetCpuId(leaf, subleaf);
                     if (reg.IsValid())
                         processor.AddLeaf(reg);
@@ -110,7 +119,7 @@ void GetCpuIdIntelStandard(ICpuId& cpuid, tree::CpuIdProcessor& processor)
                 if (reg.IsValid())
                     processor.AddLeaf(reg);
                 subleaf++;
-            } while(reg.IsValid() && (reg.Ebx() & 0x0000FFFF));
+            } while(subleaf < 0xFF && reg.IsValid() && (reg.Ebx() & 0x0000FFFF));
             break;
         }
         case 13: {
@@ -165,7 +174,7 @@ void GetCpuIdIntelStandard(ICpuId& cpuid, tree::CpuIdProcessor& processor)
                     if (reg.IsValid())
                         processor.AddLeaf(reg);
                     subleaf++;
-                    if (!reg.IsValid() || (reg.Eax() & 0x0000000F) == 0)
+                    if (subleaf > 0xFF || !reg.IsValid() || (reg.Eax() & 0x0000000F) == 0)
                         subleaf = 0;
                 } while (subleaf > 0);
             }
@@ -204,9 +213,58 @@ void GetCpuIdStandard(ICpuId& cpuid, tree::CpuIdProcessor& processor)
     GetCpuIdRegion(cpuid, processor, 0x00000000);
 }
 
+/**
+ * @brief Get the CpuId Extended Registers for Intel and AMD.
+ *
+ * When comparing Intel with AMD, they don't overlap, so while the bits have
+ * different meanings in some cases, the same algorithm works for both.
+ *
+ * @param cpuid The CPUID object to get the CPUID information.
+ * @param processor The tree to put the CPUID information after the query.
+ */
 void GetCpuIdIntelExtended(ICpuId& cpuid, tree::CpuIdProcessor& processor)
 {
-    GetCpuIdRegion(cpuid, processor, 0x80000000);
+    CpuIdRegister reg0 = cpuid.GetCpuId(0x80000000, 0);
+    if (!reg0.IsValid()) return;
+    processor.AddLeaf(reg0);
+
+    std::uint32_t leafs = reg0.Eax();
+    std::uint32_t leaf = 0x80000001;
+    while (leaf <= leafs && leaf <= 0x8000FFFF) {
+        switch (leaf) {
+        case 0x8000001D: {
+            // AMD Specification, Volume 3, CPUID instruction.
+            CpuIdRegister reg;
+            std::uint32_t subleaf = 0;
+            do {
+                reg = cpuid.GetCpuId(leaf, subleaf);
+                if (reg.IsValid())
+                    processor.AddLeaf(reg);
+                subleaf++;
+            } while(subleaf < 0xFF && reg.IsValid() && (reg.Eax() & 0x0000000F) != 0);
+            break;
+        }
+        case 0x80000026: {
+            // AMD Specification, Volume 3, CPUID instruction.
+            CpuIdRegister reg;
+            std::uint32_t subleaf = 0;
+            do {
+                reg = cpuid.GetCpuId(leaf, subleaf);
+                if (reg.IsValid())
+                    processor.AddLeaf(reg);
+                subleaf++;
+            } while(subleaf < 0xFF && reg.IsValid() && (reg.Ecx() & 0x0000FF00));
+            break;
+        }
+        default: {
+            CpuIdRegister reg = cpuid.GetCpuId(leaf, 0);
+            if (reg.IsValid())
+                processor.AddLeaf(reg);
+            break;
+        }
+        }
+        leaf++;
+    }
 }
 
 void GetCpuIdHypervisor(ICpuId& cpuid, tree::CpuIdProcessor& processor)

@@ -7,6 +7,10 @@ set(SOURCES
     cpuid/cpuid_factory_test.cpp
     cpuid/cpuid_native_test.cpp
     cpuid/cpuid_register_test.cpp
+    cpuid/cpuid_simulation.cpp
+    cpuid/cpuid_simulation_factory.cpp
+    cpuid/cpuid_simulation_test.cpp
+    cpuid/get_cpuid_test.cpp
     cpuid/tree/cpuid_processor_test.cpp
     cpuid/tree/cpuid_tree_test.cpp
     cpuid/tree/cpuid_write_xml_test.cpp

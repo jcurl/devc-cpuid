@@ -5,6 +5,8 @@
 #include "cpuid/cpuid_device_config.h"
 #include "cpuid/cpuid_native_config.h"
 
+#include <thread>
+
 namespace rjcp::cpuid {
 
 static auto DumpRegisters(ICpuIdFactory& factory, bool isValid)
@@ -32,18 +34,21 @@ static auto DumpRegisters(ICpuIdFactory& factory, bool isValid)
 TEST(CpuIdFactory, CpuIdDefault)
 {
     auto factory = CreateCpuIdFactory(CpuIdDefaultConfig{});
+    ASSERT_EQ(factory->threads(), std::thread::hardware_concurrency());
     DumpRegisters(*factory, false);
 }
 
 TEST(CpuIdFactory, CpuIdNative)
 {
     auto factory = CreateCpuIdFactory(CpuIdNativeConfig{});
+    ASSERT_EQ(factory->threads(), std::thread::hardware_concurrency());
     DumpRegisters(*factory, true);
 }
 
 TEST(CpuIdFactory, CpuIdDeviceDefault)
 {
     auto factory = CreateCpuIdFactory(CpuIdDeviceConfig{});
+    ASSERT_EQ(factory->threads(), std::thread::hardware_concurrency());
     DumpRegisters(*factory, true);
 }
 
@@ -52,12 +57,14 @@ TEST(CpuIdFactory, CpuIdDeviceSeek)
     CpuIdDeviceConfig config{DeviceAccessMethod::seek};
     auto factory = CreateCpuIdFactory(config);
     DumpRegisters(*factory, true);
+    ASSERT_EQ(factory->threads(), std::thread::hardware_concurrency());
 }
 
 TEST(CpuIdFactory, CpuIdDevicePread)
 {
     CpuIdDeviceConfig config{DeviceAccessMethod::pread};
     auto factory = CreateCpuIdFactory(config);
+    ASSERT_EQ(factory->threads(), std::thread::hardware_concurrency());
     DumpRegisters(*factory, true);
 }
 

@@ -21,6 +21,13 @@ public:
     virtual auto create(unsigned int cpunum) noexcept -> std::unique_ptr<ICpuId> = 0;
 
     /**
+     * @brief Get the number of threads (CPUs)
+     *
+     * @return unsigned int The number of threads.
+     */
+    virtual auto threads() const -> unsigned int = 0;
+
+    /**
      * @brief Destroy the ICpuIdFactory object
      *
      */

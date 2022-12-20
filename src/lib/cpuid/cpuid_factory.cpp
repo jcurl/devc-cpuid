@@ -6,13 +6,15 @@
 #include "cpuid/cpuid_native_config.h"
 #include "cpuid/cpuid_native.h"
 
+#include <thread>
+
 namespace rjcp::cpuid
 {
 
 namespace
 {
 
-template <typename CreationCallback>
+template<typename CreationCallback>
 class CpuIdFactoryWithCallback : public ICpuIdFactory
 {
 public:
@@ -25,11 +27,16 @@ public:
         return m_create_callback(cpunum);
     }
 
+    auto threads() const -> unsigned int override
+    {
+        return std::thread::hardware_concurrency();
+    }
+
 private:
     CreationCallback m_create_callback;
 };
 
-template <typename CreationCallback>
+template<typename CreationCallback>
 auto MakeCpuIdFactory(const CreationCallback& callback) -> std::unique_ptr<ICpuIdFactory>
 {
     return std::make_unique<CpuIdFactoryWithCallback<CreationCallback>>(callback);
@@ -37,24 +44,21 @@ auto MakeCpuIdFactory(const CreationCallback& callback) -> std::unique_ptr<ICpuI
 
 } // namespace
 
-// TODO: Consider extracting the CreateCpuIdFactory specializations into
-// separate translation units to decouple the concrete types.
-
-template <>
+template<>
 auto CreateCpuIdFactory(const CpuIdDefaultConfig &) noexcept -> std::unique_ptr<ICpuIdFactory>
 {
     return MakeCpuIdFactory([](unsigned int cpunum) -> std::unique_ptr<ICpuId>
                             { return std::make_unique<CpuIdDefault>(cpunum); });
 }
 
-template <>
+template<>
 auto CreateCpuIdFactory(const CpuIdDeviceConfig &config) noexcept -> std::unique_ptr<ICpuIdFactory>
 {
     return MakeCpuIdFactory([config](unsigned int cpunum) -> std::unique_ptr<ICpuId>
                             { return std::make_unique<CpuIdDevice>(cpunum, config.method); });
 }
 
-template <>
+template<>
 auto CreateCpuIdFactory(const CpuIdNativeConfig &) noexcept -> std::unique_ptr<ICpuIdFactory>
 {
     return MakeCpuIdFactory([](unsigned int cpunum) -> std::unique_ptr<ICpuId>

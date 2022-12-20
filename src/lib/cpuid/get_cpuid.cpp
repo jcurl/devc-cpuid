@@ -1,7 +1,5 @@
 #include "cpuid/get_cpuid.h"
 
-#include <thread>
-
 namespace rjcp::cpuid {
 
 enum class CpuType
@@ -21,7 +19,7 @@ auto GetCpuId(ICpuIdFactory& factory) -> std::unique_ptr<tree::CpuIdTree>
 {
     auto tree = std::make_unique<tree::CpuIdTree>();
 
-    unsigned int threads = std::thread::hardware_concurrency();
+    unsigned int threads = factory.threads();
 
     for (unsigned int cpunum = 0; cpunum < threads; cpunum++) {
         auto cpuid = factory.create(cpunum);
@@ -34,14 +32,13 @@ auto GetCpuId(ICpuIdFactory& factory) -> std::unique_ptr<tree::CpuIdTree>
             tree->SetProcessor(cpunum, std::move(processor));
             continue;
         }
-
         processor.AddLeaf(reg);
 
         CpuType type = CpuType::VENDOR_UNKNOWN;
         if (reg.Ebx() == 0x756E6547 && reg.Ecx() == 0x6C65746E && reg.Edx() == 0x49656E69) {
             // GenuineIntel
             type = CpuType::VENDOR_INTEL;
-        } else if (reg.Ebx() == 0x68747541 && reg.Ecx() == 0x444d4163 && reg.Edx() == 0x444d4163) {
+        } else if (reg.Ebx() == 0x68747541 && reg.Ecx() == 0x444d4163 && reg.Edx() == 0x69746E65) {
             // AuthenticAMD
             type = CpuType::VENDOR_AMD;
         }
@@ -76,108 +73,127 @@ void GetCpuIdIntelStandard(ICpuId& cpuid, tree::CpuIdProcessor& processor)
         switch (leaf) {
         case 4: {
             CpuIdRegister reg = cpuid.GetCpuId(leaf, 0);
-            processor.AddLeaf(reg);
-
-            unsigned int subleaf = 1;
-            while (reg.Eax() & 0x0000001F) {
-                reg = cpuid.GetCpuId(leaf, subleaf);
+            if (reg.IsValid()) {
                 processor.AddLeaf(reg);
-                subleaf++;
-            };
+
+                std::uint32_t subleaf = 1;
+                while (reg.IsValid() && (reg.Eax() & 0x0000001F)) {
+                    reg = cpuid.GetCpuId(leaf, subleaf);
+                    if (reg.IsValid())
+                        processor.AddLeaf(reg);
+                    subleaf++;
+                }
+            }
             break;
         }
         case 7: {
             CpuIdRegister reg = cpuid.GetCpuId(leaf, 0);
-            processor.AddLeaf(reg);
-            sgx = reg.Ebx() & 0x00000004;
+            if (reg.IsValid()) {
+                processor.AddLeaf(reg);
+                sgx = reg.Ebx() & 0x00000004;
 
-            unsigned int features = reg.Eax();
-            for (unsigned int i = 1; i <= features; i++) {
-                processor.AddLeaf(cpuid.GetCpuId(7, i));
+                std::uint32_t features = reg.Eax();
+                for (std::uint32_t i = 1; i <= features; i++) {
+                    reg = cpuid.GetCpuId(leaf, i);
+                    if (reg.IsValid())
+                        processor.AddLeaf(reg);
+                }
             }
             break;
         }
         case 11:
         case 31: {
             CpuIdRegister reg;
-            unsigned int subleaf = 0;
+            std::uint32_t subleaf = 0;
             do {
                 reg = cpuid.GetCpuId(leaf, subleaf);
-                processor.AddLeaf(reg);
+                if (reg.IsValid())
+                    processor.AddLeaf(reg);
                 subleaf++;
-            } while(reg.Ebx() & 0x0000FFFF);
+            } while(reg.IsValid() && (reg.Ebx() & 0x0000FFFF));
             break;
         }
         case 13: {
             CpuIdRegister reg;
-            unsigned int subleaf = 0;
-            do {
-                reg = cpuid.GetCpuId(leaf, subleaf);
-                processor.AddLeaf(reg);
-                subleaf++;
-            } while(subleaf <= 2 || (reg.Eax() || reg.Ebx() || reg.Ecx() || reg.Edx()));
+            for (std::uint32_t i = 0; i < 64; i++) {
+                reg = cpuid.GetCpuId(leaf, i);
+                if (reg.IsValid() &&
+                  (i <= 2 || reg.Eax() || reg.Ebx() || reg.Ecx() || reg.Edx()))
+                    processor.AddLeaf(reg);
+            }
             break;
         }
         case 15: {
-            for (unsigned int i = 0; i < 2; i++) {
-                processor.AddLeaf(cpuid.GetCpuId(leaf, i));
+            for (std::uint32_t i = 0; i < 2; i++) {
+                CpuIdRegister reg = cpuid.GetCpuId(leaf, i);
+                if (reg.IsValid())
+                    processor.AddLeaf(reg);
             }
             break;
         }
         case 16: {
             CpuIdRegister reg = cpuid.GetCpuId(leaf, 0);
-            processor.AddLeaf(reg);
+            if (reg.IsValid()) {
+                processor.AddLeaf(reg);
 
-            unsigned int resid = 1;
-            unsigned int residbit = reg.Ebx() >> 1;
-            while (residbit) {
-                processor.AddLeaf(cpuid.GetCpuId(leaf, resid));
-                residbit >>= 1;
-                resid++;
+                std::uint32_t resid = 1;
+                std::uint32_t residbit = reg.Ebx() >> 1;
+                while (residbit) {
+                    reg = cpuid.GetCpuId(leaf, resid);
+                    if (reg.IsValid())
+                        processor.AddLeaf(reg);
+                    residbit >>= 1;
+                    resid++;
+                }
             }
             break;
         }
         case 18: {
-            processor.AddLeaf(cpuid.GetCpuId(leaf, 0));
-            processor.AddLeaf(cpuid.GetCpuId(leaf, 1));
+            CpuIdRegister reg0 = cpuid.GetCpuId(leaf, 0);
+            if (reg0.IsValid())
+                processor.AddLeaf(reg0);
+
+            CpuIdRegister reg1 = cpuid.GetCpuId(leaf, 1);
+            if (reg1.IsValid())
+                processor.AddLeaf(reg1);
 
             if (sgx) {
                 CpuIdRegister reg;
-                unsigned int subleaf = 2;
+                std::uint32_t subleaf = 2;
                 do {
                     reg = cpuid.GetCpuId(leaf, subleaf);
-                    processor.AddLeaf(reg);
+                    if (reg.IsValid())
+                        processor.AddLeaf(reg);
                     subleaf++;
-                    if ((reg.Eax() & 0x0000000F) == 0) subleaf = 0;
+                    if (!reg.IsValid() || (reg.Eax() & 0x0000000F) == 0)
+                        subleaf = 0;
                 } while (subleaf > 0);
             }
             break;
         }
-        case 20: {
-            CpuIdRegister reg = cpuid.GetCpuId(leaf, 0);
-            processor.AddLeaf(reg);
-
-            unsigned int subleafs = reg.Eax();
-            for (unsigned int i = 1; i < subleafs; i++) {
-                processor.AddLeaf(cpuid.GetCpuId(leaf, i));
-            }
-            break;
-        }
+        case 20:
         case 23:
         case 24:
         case 32: {
             CpuIdRegister reg = cpuid.GetCpuId(leaf, 0);
-            processor.AddLeaf(reg);
+            if (reg.IsValid()) {
+                processor.AddLeaf(reg);
 
-            unsigned int subleafs = reg.Eax();
-            for (unsigned int i = 1; i <= subleafs; i++) {
-                processor.AddLeaf(cpuid.GetCpuId(leaf, i));
+                std::uint32_t subleafs = reg.Eax();
+                for (std::uint32_t i = 1; i <= subleafs; i++) {
+                    reg = cpuid.GetCpuId(leaf, i);
+                    if (reg.IsValid())
+                        processor.AddLeaf(reg);
+                }
             }
             break;
         }
-        default:
-            processor.AddLeaf(cpuid.GetCpuId(leaf, 0));
+        default: {
+            CpuIdRegister reg = cpuid.GetCpuId(leaf, 0);
+            if (reg.IsValid())
+                processor.AddLeaf(reg);
             break;
+        }
         }
         leaf++;
     }
@@ -208,6 +224,8 @@ void GetCpuIdHypervisor(ICpuId& cpuid, tree::CpuIdProcessor& processor)
 void GetCpuIdRegion(ICpuId& cpuid, tree::CpuIdProcessor& processor, std::uint32_t region)
 {
     CpuIdRegister reg0 = cpuid.GetCpuId(region, 0);
+    if (!reg0.IsValid()) return;
+
     processor.AddLeaf(reg0);
     std::uint32_t leafs = reg0.Eax();
     std::uint32_t leaf = region + 1;

@@ -3,7 +3,6 @@
 
 #include "cpuid/icpuid.h"
 #include "cpuid/icpuid_factory.h"
-#include "cpuid/cpuid_device_config.h"
 
 #include <memory>
 

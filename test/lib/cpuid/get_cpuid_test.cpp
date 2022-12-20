@@ -1,0 +1,347 @@
+#include <gtest/gtest.h>
+
+#include "cpuid/get_cpuid.h"
+#include "cpuid/cpuid_factory.h"
+#include "cpuid/cpuid_default_config.h"
+#include "cpuid/cpuid_device_config.h"
+#include "cpuid/cpuid_native_config.h"
+#include "cpuid/cpuid_simulation_config.h"
+#include "cpuid/get_cpuid.h"
+#include "cpuid/tree/cpuid_tree.h"
+#include "cpuid/tree/cpuid_write_xml.h"
+
+#include <memory>
+#include <utility>
+
+namespace rjcp::cpuid {
+
+TEST(GetCpuId, NativeFactory)
+{
+    auto factory = CreateCpuIdFactory(CpuIdNativeConfig{});
+    auto cpu = GetCpuId(*factory);
+    ASSERT_EQ(cpu->Size(), factory->threads());
+}
+
+TEST(GetCpuId, DeviceFactory)
+{
+    auto factory = CreateCpuIdFactory(CpuIdDeviceConfig{});
+    auto cpu = GetCpuId(*factory);
+    ASSERT_EQ(cpu->Size(), factory->threads());
+}
+
+TEST(GetCpuId, DefaultFactory)
+{
+    auto factory = CreateCpuIdFactory(CpuIdDefaultConfig{});
+    auto cpu = GetCpuId(*factory);
+    ASSERT_EQ(cpu->Size(), factory->threads());
+}
+
+TEST(GetCpuId, GenuineIntel_i7_6700T_SGX)
+{
+    // The following data is taken from an i7-6700T CPU.
+    std::shared_ptr<tree::CpuIdTree> tree = std::make_shared<tree::CpuIdTree>();
+    tree::CpuIdProcessor cpu0{};
+
+    cpu0.AddLeaf(CpuIdRegister{0x00000000, 0x00000000, 0x00000016, 0x756E6547, 0x6C65746E, 0x49656E69});
+    cpu0.AddLeaf(CpuIdRegister{0x00000001, 0x00000000, 0x000506E3, 0x00100800, 0x7FFAFBFF, 0xBFEBFBFF});
+    cpu0.AddLeaf(CpuIdRegister{0x00000002, 0x00000000, 0x76036301, 0x00F0B5FF, 0x00000000, 0x00C30000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000003, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000000, 0x1C004121, 0x01C0003F, 0x0000003F, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000001, 0x1C004122, 0x01C0003F, 0x0000003F, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000002, 0x1C004143, 0x00C0003F, 0x000003FF, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000003, 0x1C03C163, 0x03C0003F, 0x00001FFF, 0x00000006});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000004, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000005, 0x00000000, 0x00000040, 0x00000040, 0x00000003, 0x00142120});
+    cpu0.AddLeaf(CpuIdRegister{0x00000006, 0x00000000, 0x000027F7, 0x00000002, 0x00000001, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000007, 0x00000000, 0x00000000, 0x029C67AF, 0x00000000, 0xBC002E00});
+    cpu0.AddLeaf(CpuIdRegister{0x00000008, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000009, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000A, 0x00000000, 0x07300404, 0x00000000, 0x00000000, 0x00000603});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000B, 0x00000000, 0x00000001, 0x00000002, 0x00000100, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000B, 0x00000001, 0x00000004, 0x00000008, 0x00000201, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000B, 0x00000002, 0x00000000, 0x00000000, 0x00000002, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000C, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000000, 0x0000001F, 0x00000440, 0x00000440, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000001, 0x0000000F, 0x000003C0, 0x00000100, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000002, 0x00000100, 0x00000240, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000003, 0x00000040, 0x000003C0, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000004, 0x00000040, 0x00000400, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000008, 0x00000080, 0x00000000, 0x00000001, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000E, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000F, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000F, 0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000010, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000011, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000012, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000012, 0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000012, 0x00000002, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000013, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000014, 0x00000000, 0x00000001, 0x0000000F, 0x00000007, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000014, 0x00000001, 0x02490002, 0x003F3FFF, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000015, 0x00000000, 0x00000002, 0x000000EA, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000016, 0x00000000, 0x00000AF0, 0x00000E10, 0x00000064, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000000, 0x00000000, 0x80000008, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000001, 0x00000000, 0x00000000, 0x00000000, 0x00000121, 0x2C100800});
+    cpu0.AddLeaf(CpuIdRegister{0x80000002, 0x00000000, 0x65746E49, 0x2952286C, 0x726F4320, 0x4D542865});
+    cpu0.AddLeaf(CpuIdRegister{0x80000003, 0x00000000, 0x37692029, 0x3037362D, 0x43205430, 0x40205550});
+    cpu0.AddLeaf(CpuIdRegister{0x80000004, 0x00000000, 0x382E3220, 0x7A484730, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000005, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000006, 0x00000000, 0x00000000, 0x00000000, 0x01006040, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000007, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000100});
+    cpu0.AddLeaf(CpuIdRegister{0x80000008, 0x00000000, 0x00003027, 0x00000000, 0x00000000, 0x00000000});
+    tree->SetProcessor(0, cpu0);
+
+    CpuIdSimulationConfig config{tree};
+    ASSERT_EQ(config.GetTree()->Size(), 1);
+
+    auto factory = CreateCpuIdFactory(config);
+    ASSERT_EQ(factory->threads(), 1);
+
+    auto cpuid0 = factory->create(0);
+    auto cpureg00 = cpuid0->GetCpuId(0, 0);
+    ASSERT_EQ(cpureg00.Eax(), 0x00000016);
+
+	auto query = GetCpuId(*factory);
+	EXPECT_EQ(query->Size(), 1);
+	EXPECT_EQ(query->GetProcessor(0)->Size(), cpu0.Size());
+
+	// Dump to allow the user to debug what might have gone wrong.
+	if (::testing::Test::HasFailure())
+		tree::WriteCpuIdXml(*query, std::cout);
+}
+
+TEST(GetCpuId, GenuineIntel_i7_6700T_KVM)
+{
+    // The following data is taken from an i7-6700T CPU running QNX on KVM.
+    std::shared_ptr<tree::CpuIdTree> tree = std::make_shared<tree::CpuIdTree>();
+    tree::CpuIdProcessor cpu0{};
+
+    cpu0.AddLeaf(CpuIdRegister{0x00000000, 0x00000000, 0x00000016, 0x756E6547, 0x6C65746E, 0x49656E69});
+    cpu0.AddLeaf(CpuIdRegister{0x00000001, 0x00000000, 0x000506E3, 0x00020800, 0xFFFAB223, 0x1F8BFBFF});
+    cpu0.AddLeaf(CpuIdRegister{0x00000002, 0x00000000, 0x00000001, 0x00000000, 0x0000004D, 0x002C307D});
+    cpu0.AddLeaf(CpuIdRegister{0x00000003, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000000, 0x04000121, 0x01C0003F, 0x0000003F, 0x00000001});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000001, 0x04000122, 0x01C0003F, 0x0000003F, 0x00000001});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000002, 0x04000143, 0x03C0003F, 0x00000FFF, 0x00000001});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000003, 0x04004163, 0x03C0003F, 0x00003FFF, 0x00000006});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000004, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000005, 0x00000000, 0x00000000, 0x00000000, 0x00000003, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000006, 0x00000000, 0x00000004, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000007, 0x00000000, 0x00000000, 0x009C47AB, 0x00000004, 0xAC000400});
+    cpu0.AddLeaf(CpuIdRegister{0x00000008, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000009, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000A, 0x00000000, 0x07300402, 0x00000000, 0x00000000, 0x00008603});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000B, 0x00000000, 0x00000000, 0x00000001, 0x00000100, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000B, 0x00000001, 0x00000001, 0x00000002, 0x00000201, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000B, 0x00000002, 0x00000000, 0x00000000, 0x00000002, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000C, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000000, 0x0000001F, 0x00000440, 0x00000440, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000001, 0x0000000F, 0x000003C0, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000002, 0x00000100, 0x00000240, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000003, 0x00000040, 0x000003C0, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000004, 0x00000040, 0x00000400, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000005, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000E, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000F, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x0000000F, 0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000010, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000011, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000012, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000012, 0x00000001, 0x00000000, 0x00000000, 0x00000003, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000013, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000014, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000015, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000016, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x40000000, 0x00000000, 0x40000001, 0x4B4D564B, 0x564B4D56, 0x0000004D});
+    cpu0.AddLeaf(CpuIdRegister{0x40000001, 0x00000000, 0x01007AFB, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000000, 0x00000000, 0x80000008, 0x756E6547, 0x6C65746E, 0x49656E69});
+    cpu0.AddLeaf(CpuIdRegister{0x80000001, 0x00000000, 0x000506E3, 0x00000000, 0x00000121, 0x2C100800});
+    cpu0.AddLeaf(CpuIdRegister{0x80000002, 0x00000000, 0x65746E49, 0x2952286C, 0x726F4320, 0x4D542865});
+    cpu0.AddLeaf(CpuIdRegister{0x80000003, 0x00000000, 0x37692029, 0x3037362D, 0x43205430, 0x40205550});
+    cpu0.AddLeaf(CpuIdRegister{0x80000004, 0x00000000, 0x382E3220, 0x7A484730, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000005, 0x00000000, 0x01FF01FF, 0x01FF01FF, 0x40020140, 0x40020140});
+    cpu0.AddLeaf(CpuIdRegister{0x80000006, 0x00000000, 0x00000000, 0x42004200, 0x02008140, 0x00808140});
+    cpu0.AddLeaf(CpuIdRegister{0x80000007, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000008, 0x00000000, 0x00003027, 0x0100D000, 0x00001001, 0x00000000});
+    tree->SetProcessor(0, cpu0);
+
+    CpuIdSimulationConfig config{tree};
+    ASSERT_EQ(config.GetTree()->Size(), 1);
+
+    auto factory = CreateCpuIdFactory(config);
+    ASSERT_EQ(factory->threads(), 1);
+
+    auto cpuid0 = factory->create(0);
+    auto cpureg00 = cpuid0->GetCpuId(0, 0);
+    ASSERT_EQ(cpureg00.Eax(), 0x00000016);
+
+	auto query = GetCpuId(*factory);
+	EXPECT_EQ(query->Size(), 1);
+
+	// 0x0000000D, 0x00000005 is ignored, as all entries are zero.
+	EXPECT_EQ(query->GetProcessor(0)->Size(), cpu0.Size() - 1);
+
+	// Dump to allow the user to debug what might have gone wrong.
+	if (::testing::Test::HasFailure())
+		tree::WriteCpuIdXml(*query, std::cout);
+}
+
+TEST(GetCpuId, GenuineIntel_i7_12900K)
+{
+    // The following data is taken from an i7-12900K CPU.
+    std::shared_ptr<tree::CpuIdTree> tree = std::make_shared<tree::CpuIdTree>();
+    tree::CpuIdProcessor cpu0{};
+	cpu0.AddLeaf(CpuIdRegister{0x00000000, 0x00000000, 0x00000020, 0x756E6547, 0x6C65746E, 0x49656E69});
+	cpu0.AddLeaf(CpuIdRegister{0x00000001, 0x00000000, 0x00090672, 0x00800800, 0x7FFAFBFF, 0xBFEBFBFF});
+	cpu0.AddLeaf(CpuIdRegister{0x00000002, 0x00000000, 0x00FEFF01, 0x000000F0, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000003, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000000, 0xFC004121, 0x02C0003F, 0x0000003F, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000001, 0xFC004122, 0x01C0003F, 0x0000003F, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000002, 0xFC01C143, 0x0240003F, 0x000007FF, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000003, 0xFC1FC163, 0x02C0003F, 0x00009FFF, 0x00000004});
+	cpu0.AddLeaf(CpuIdRegister{0x00000005, 0x00000000, 0x00000040, 0x00000040, 0x00000003, 0x10102020});
+	cpu0.AddLeaf(CpuIdRegister{0x00000006, 0x00000000, 0x00DFCFF7, 0x00000002, 0x00000409, 0x00000003});
+	cpu0.AddLeaf(CpuIdRegister{0x00000007, 0x00000000, 0x00000001, 0x239CA7EB, 0x98C027AC, 0xFC1CC410});
+	cpu0.AddLeaf(CpuIdRegister{0x00000007, 0x00000001, 0x00400810, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000008, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000009, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000A, 0x00000000, 0x07300605, 0x00000000, 0x00000007, 0x00008603});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000B, 0x00000000, 0x00000001, 0x00000002, 0x00000100, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000B, 0x00000001, 0x00000007, 0x00000018, 0x00000201, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000C, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000000, 0x00000207, 0x00000340, 0x00000A88, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000001, 0x0000000F, 0x000003D0, 0x00019900, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000002, 0x00000100, 0x00000240, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000008, 0x00000080, 0x00000000, 0x00000001, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000009, 0x00000008, 0x00000A80, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x0000000B, 0x00000010, 0x00000000, 0x00000001, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x0000000C, 0x00000018, 0x00000000, 0x00000001, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x0000000F, 0x00000328, 0x00000000, 0x00000001, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000D, 0x00000010, 0x00000008, 0x00000000, 0x00000001, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000E, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000F, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000000F, 0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000010, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000010, 0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000011, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000012, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000012, 0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000013, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000014, 0x00000000, 0x00000001, 0x0000005F, 0x00000007, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000014, 0x00000001, 0x02490002, 0x003F003F, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000015, 0x00000000, 0x00000002, 0x000000A6, 0x0249F000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000016, 0x00000000, 0x00000C80, 0x00001450, 0x00000064, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000017, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000000, 0x00000008, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000001, 0x00000000, 0x00080001, 0x00000020, 0x00004022});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000002, 0x00000000, 0x00080006, 0x00000004, 0x00004022});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000003, 0x00000000, 0x0010000F, 0x00000001, 0x00004125});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000004, 0x00000000, 0x00040001, 0x00000010, 0x00004024});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000005, 0x00000000, 0x00040006, 0x00000008, 0x00004024});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000006, 0x00000000, 0x00080008, 0x00000001, 0x00004124});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000007, 0x00000000, 0x00080007, 0x00000080, 0x00004043});
+	cpu0.AddLeaf(CpuIdRegister{0x00000018, 0x00000008, 0x00000000, 0x00080009, 0x00000080, 0x00004043});
+	cpu0.AddLeaf(CpuIdRegister{0x00000019, 0x00000000, 0x00000007, 0x00000014, 0x00000003, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000001A, 0x00000000, 0x40000001, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000001B, 0x00000000, 0x00000001, 0x00000001, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000001C, 0x00000000, 0x4000000B, 0x00000007, 0x00000007, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000001D, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000001E, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000001F, 0x00000000, 0x00000001, 0x00000002, 0x00000100, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x0000001F, 0x00000001, 0x00000007, 0x00000018, 0x00000201, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x00000020, 0x00000000, 0x00000000, 0x00000001, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x80000000, 0x00000000, 0x80000008, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x80000001, 0x00000000, 0x00000000, 0x00000000, 0x00000121, 0x2C100000});
+	cpu0.AddLeaf(CpuIdRegister{0x80000002, 0x00000000, 0x68743231, 0x6E654720, 0x746E4920, 0x52286C65});
+	cpu0.AddLeaf(CpuIdRegister{0x80000003, 0x00000000, 0x6F432029, 0x54286572, 0x6920294D, 0x32312D39});
+	cpu0.AddLeaf(CpuIdRegister{0x80000004, 0x00000000, 0x4B303039, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x80000005, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x80000006, 0x00000000, 0x00000000, 0x00000000, 0x05007040, 0x00000000});
+	cpu0.AddLeaf(CpuIdRegister{0x80000007, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000100});
+	cpu0.AddLeaf(CpuIdRegister{0x80000008, 0x00000000, 0x0000302E, 0x00000000, 0x00000000, 0x00000000});
+    tree->SetProcessor(0, cpu0);
+
+    CpuIdSimulationConfig config{tree};
+    ASSERT_EQ(config.GetTree()->Size(), 1);
+
+    auto factory = CreateCpuIdFactory(config);
+    ASSERT_EQ(factory->threads(), 1);
+
+    auto cpuid0 = factory->create(0);
+    auto cpureg00 = cpuid0->GetCpuId(0, 0);
+    ASSERT_EQ(cpureg00.Eax(), 0x00000020);
+
+	auto query = GetCpuId(*factory);
+	EXPECT_EQ(query->Size(), 1);
+	EXPECT_EQ(query->GetProcessor(0)->Size(), cpu0.Size());
+
+	// Dump to allow the user to debug what might have gone wrong.
+	if (::testing::Test::HasFailure())
+		tree::WriteCpuIdXml(*query, std::cout);
+}
+
+TEST(GetCpuId, AuthenticAMD_Phenom_II_X6_1055T)
+{
+    // The following data is taken from an AMD Phenom(tm) II X6 1055T CPU.
+    std::shared_ptr<tree::CpuIdTree> tree = std::make_shared<tree::CpuIdTree>();
+    tree::CpuIdProcessor cpu0{};
+
+    cpu0.AddLeaf(CpuIdRegister{0x00000000, 0x00000000, 0x00000006, 0x68747541, 0x444D4163, 0x69746E65});
+    cpu0.AddLeaf(CpuIdRegister{0x80000000, 0x00000000, 0x8000001B, 0x68747541, 0x444D4163, 0x69746E65});
+    cpu0.AddLeaf(CpuIdRegister{0x00000001, 0x00000000, 0x00100FA0, 0x00060800, 0x00802009, 0x178BFBFF});
+    cpu0.AddLeaf(CpuIdRegister{0x00000002, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000003, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000004, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000005, 0x00000000, 0x00000040, 0x00000040, 0x00000003, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x00000006, 0x00000000, 0x00000000, 0x00000000, 0x00000001, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000001, 0x00000000, 0x00100FA0, 0x10000050, 0x000037FF, 0xEFD3FBFF});
+    cpu0.AddLeaf(CpuIdRegister{0x80000002, 0x00000000, 0x20444D41, 0x6E656850, 0x74286D6F, 0x4920296D});
+    cpu0.AddLeaf(CpuIdRegister{0x80000003, 0x00000000, 0x36582049, 0x35303120, 0x50205435, 0x65636F72});
+    cpu0.AddLeaf(CpuIdRegister{0x80000004, 0x00000000, 0x726F7373, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000005, 0x00000000, 0xFF30FF10, 0xFF30FF20, 0x40020140, 0x40020140});
+    cpu0.AddLeaf(CpuIdRegister{0x80000006, 0x00000000, 0x20800000, 0x42004200, 0x02008140, 0x0030B140});
+    cpu0.AddLeaf(CpuIdRegister{0x80000007, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000003F9});
+    cpu0.AddLeaf(CpuIdRegister{0x80000008, 0x00000000, 0x00003030, 0x00000000, 0x00003005, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000009, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x8000000A, 0x00000000, 0x00000001, 0x00000040, 0x00000000, 0x0000040F});
+    cpu0.AddLeaf(CpuIdRegister{0x8000000B, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x8000000C, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x8000000D, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x8000000E, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x8000000F, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000010, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000011, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000012, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000013, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000014, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000015, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000016, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000017, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000018, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x80000019, 0x00000000, 0xF0300000, 0x60100000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x8000001A, 0x00000000, 0x00000003, 0x00000000, 0x00000000, 0x00000000});
+    cpu0.AddLeaf(CpuIdRegister{0x8000001B, 0x00000000, 0x0000001F, 0x00000000, 0x00000000, 0x00000000});
+    tree->SetProcessor(0, cpu0);
+
+    CpuIdSimulationConfig config{tree};
+    ASSERT_EQ(config.GetTree()->Size(), 1);
+
+    auto factory = CreateCpuIdFactory(config);
+    ASSERT_EQ(factory->threads(), 1);
+
+    auto cpuid0 = factory->create(0);
+    auto cpureg00 = cpuid0->GetCpuId(0, 0);
+    ASSERT_EQ(cpureg00.Eax(), 0x00000006);
+	auto cpureg80 = cpuid0->GetCpuId(0x80000000, 0);
+    ASSERT_EQ(cpureg80.Eax(), 0x8000001B);
+
+	auto query = GetCpuId(*factory);
+	EXPECT_EQ(query->Size(), 1);
+	EXPECT_EQ(query->GetProcessor(0)->Size(), cpu0.Size());
+
+	// Dump to allow the user to debug what might have gone wrong
+	if (::testing::Test::HasFailure())
+		tree::WriteCpuIdXml(*query, std::cout);
+}
+
+}

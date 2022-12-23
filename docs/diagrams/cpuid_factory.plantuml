@@ -5,8 +5,16 @@ abstract class ICpuIdFactory {
     +~ICpuIdFactory() = default
 }
 
-class " " as Global <<(G,#FF7700) global free>> {
+class " " as Global<T> <<(G,#FF7700) global free>> {
     +CreateCpuIdFactory(config: const Config&) :\n    std::unique_ptr<ICpuIdFactory>
+}
+
+class " " as GlobalDefault<T as CpuIdDefaultConfig> <<(G,#FF7700) global free>> {
+    +CreateCpuIdFactory<>(config: const CpuIdDefaultConfig&) :\n    std::unique_ptr<ICpuIdFactory>
+}
+
+class " " as GlobalNative<T as CpuIdNativeConfig> <<(G,#FF7700) global free>> {
+    +CreateCpuIdFactory<>(config: const CpuIdNativeConfig&) :\n    std::unique_ptr<ICpuIdFactory>
 }
 
 class CpuIdFactoryWithCallback<CreationCallback> {
@@ -19,8 +27,18 @@ note bottom
     `ICpuId` object.
 end note
 
-ICpuIdFactory <|.d. CpuIdFactoryWithCallback
+class ICpuId { }
 
-Global::CreateCpuIdFactory -r-> CpuIdFactoryWithCallback::CpuIdFactoryWithCallback
+class CpuIdNative { }
 
+CpuIdNative .l.|> ICpuId
+CpuIdFactoryWithCallback .r.|> ICpuIdFactory
+
+Global -d-> GlobalDefault : <<specialised by>>
+Global -d-> GlobalNative : <<specialised by>>
+GlobalDefault -d-> CpuIdFactoryWithCallback : <<instantiates>>
+GlobalNative -d-> CpuIdFactoryWithCallback : <<instantiates>>
+
+GlobalNative .r.> CpuIdNative : <<returns>>
+CpuIdFactoryWithCallback -d-> CpuIdNative : <<instantiates>>
 @enduml

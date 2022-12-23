@@ -1,0 +1,21 @@
+@startuml CpuIdTree
+
+class CpuIdTree {
+    +SetProcessor(cpu: unsigned int, tree: CpuIdProcessor&): bool
+    +GetProcessor(cpu: unsigned int): CpuIdProcessor*
+    +Size(): size_t
+    +IsEmpty: bool
+}
+
+class CpuIdProcessor {
+    +AddLeaf(cpureg: CpuIdRegister&): bool
+    +GetLeaf(eax: uint32_t, ecx: uint32_t): CpuIdRegister*
+    +Size(): size_t
+    +IsEmpty: bool
+}
+
+class CpuIdRegister { }
+
+CpuIdTree "1" *-d- "*" CpuIdProcessor
+CpuIdProcessor "1" *-d- "*" CpuIdRegister
+@enduml

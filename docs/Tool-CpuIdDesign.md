@@ -23,20 +23,15 @@ CPUID instructions. This will map to the factories given by the template
 
 The main entry point is the `main` function.
 
- ![CpuIdTool](out/diagrams/cpuid_tool/cpuid_tool.svg)
+It does the following:
 
-To interpret the UML diagram:
+* Gets a `ICpuIdFactory` from a configuration, either:
+  * `CpuIdNativeConfig` (via the CPUID insruction) or
+  * `CpuIdDeviceConfig` (via the device `/dev/cpu/N/cpuid`).
+  * to the factory function `rjcp::cpuid::CreateCpuIdFactory`
+* Gets the CPUID dump, from the free function `rjcp::cpuid::GetCpuId`
+* Writes the output to a stream, in this case `std::cout`, with
+  `rjcp::cpuid::tree::WriteCpuIdXml`
 
-* The `main` function creates an `std::ostream`. It gives it to a concrete class
-  derived from `ICpuIdOutputWriter`.
-* A concrete class derived from`ICpuIdFactory` is created by the main
-  application, and is given to the `CpuIdDumper` class, which uses this to
-  instantiate an `ICpuId` object, one per CPU.
-  * The concrete class to create is determined by the command line option.
-  * The `ICpuIdOutputWriter` is also given to the `CpuIdDumper`.
-* The `CpuIdDumper` would read the basic register to determine the CPU type via
-  CPUID function EAX=0x00000000 (e.g. `AuthenticAMD`, or `GenuineIntel`).
-  * If it is either AMD, or Intel, the `CpuIdIntelDump` class is instantiated.
-  * Else the `CpuIdDefaultDump` object is created.
-* The `CpuIdDumper` uses the `ICpuIdDump` object to iterate through the
-  registers and dump the output.
+The output of this file can then be loaded using other tools, such as
+[RJCP.CpuId](https://github.com/jcurl/RJCP.DLL.CpuId/).

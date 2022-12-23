@@ -14,10 +14,18 @@ The namespace hierarchy:
 
   The main application that implements the resource manager API.
 
+* rjcp::cpuid::tree
+
+  Classes and methods that manage the in memory representation of all CPU
+  objects, and the results of the CPUID instruction calls.
+
+  Contains also the methods that can write the `CpuIdTree` to a `std::ostream`
+  in XML format (e.g. a file, a memory buffer, or `std::cout` as an example).
+
 * rjcp::qnx::os
 
   Contains C++ abstractions of the QNX Operating System. This layer represents
-  the QNX OS prjected to C++17 for implementing a simple, single threaded,
+  the QNX OS projected to C++17 for implementing a simple, single threaded,
   resource manager. It is not intended however to be a reusable piece of code in
   other projects on its own.
 
@@ -32,6 +40,11 @@ The namespace hierarchy:
   operating systems.
 
   Only the `rjcp::qnx::os` namespace should include headers from this namespace.
+
+* rjcp::qnx::os::native::file
+
+  A `unique_handle` that represents a file handle. Projections of Posix API that
+  manipulate files, as free functions.
 
 ## 2. Folder Organisation
 
